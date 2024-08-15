@@ -1,0 +1,7 @@
+@import url("../Form/Form.module.css");
+
+/* centering submit button */
+.form-child:nth-child(4) {
+  flex-direction: row;
+  justify-content: center;
+}
