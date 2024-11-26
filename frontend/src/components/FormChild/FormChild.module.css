@@ -1,0 +1,15 @@
+.form-child {
+  display: grid;
+  padding: 0.5em;
+}
+
+input {
+  border: 2px solid var(--secondary);
+  border-radius: 10px;
+  background-color: var(--text);
+  padding: 0.5em;
+}
+
+input:focus {
+  background-color: var(--text);
+}
