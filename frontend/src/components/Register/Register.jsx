@@ -1,14 +1,14 @@
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import Form from "../Form/Form";
+import EmailInput from "../EmailInput/EmailInput";
+import { useFocusEmailInput } from "../../hooks/useFocusEmailInput";
 import styles from "./Register.module.css";
 
 function Register() {
-  const inputRef = useRef(null);
+  const emailInputRef = useFocusEmailInput();
 
   useEffect(() => {
-    inputRef.current.focus();
-  }, []);
 
   return (
     <div className={styles["form-container"]}>
