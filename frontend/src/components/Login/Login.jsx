@@ -1,12 +1,19 @@
-import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import Form from "../Form/Form";
 import EmailInput from "../EmailInput/EmailInput";
 import { useFocusEmailInput } from "../../hooks/useFocusEmailInput";
+import { useEmailValidation } from "../../hooks/useEmailValidation";
 import styles from "./Login.module.css";
 
 function Login() {
   const emailInputRef = useFocusEmailInput();
+  const [formData, setformData] = useState({
+    email: "",
+  });
+
+  const [errorMessage, setErrorMessage] = useState("");
+  const validateEmailInput = useEmailValidation(emailInputRef, setErrorMessage);
 
   useEffect(() => {
 
