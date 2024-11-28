@@ -1,20 +1,26 @@
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 import Input from "../Input/Input";
 import styles from "./PasswordInput.module.css";
 import Visibility from "../../assets/icons/visibility.svg?react";
 import VisibilityOff from "../../assets/icons/visibility-off.svg?react";
 
-function PasswordInput( props ) {
+const PasswordInput = forwardRef(function PasswordInput( ref, props)
+{
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   // toggle password visibility
   const handleClick = () => {
     if (isPasswordVisible) {
       setIsPasswordVisible(false);
+      ref.current.type = "password";
     } else {
       setIsPasswordVisible(true);
+      ref.current.type = "text";
     }
 
     ref.current.focus();
+    // move text cursor at end of input when password is selected
+    const passwordLength = ref.current.value.length;
+    ref.current.setSelectionRange(passwordLength, passwordLength);
   };
 
   // make password visibility icons work with "enter" and "space" keys
@@ -31,6 +37,7 @@ function PasswordInput( props ) {
         type="password"
         minLength={8}
         {...props}
+        ref={ref}
       ></Input>
 
       {isPasswordVisible ? (
@@ -50,6 +57,6 @@ function PasswordInput( props ) {
       )}
     </>
   );
-}
+});
 
 export default PasswordInput;

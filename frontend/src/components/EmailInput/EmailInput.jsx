@@ -1,8 +1,9 @@
+import { forwardRef } from "react";
 import Input from "../Input/Input";
 import "./EmailInput.module.css";
 
-function EmailInput(props) {
-  return <Input type="email" {...props} />;
-}
+const EmailInput = forwardRef(function EmailInput(props, ref) {
+  return <Input type="email" ref={ref} {...props} />;
+});
 
 export default EmailInput;
