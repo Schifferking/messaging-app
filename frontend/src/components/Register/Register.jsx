@@ -19,7 +19,22 @@ function Register() {
   });
 
   const [errorMessage, setErrorMessage] = useState("");
+  const [arePasswordsUnequal, setArePasswordsUnequal] = useState(false);
+  const checkPasswordInput = usePasswordValidation(setErrorMessage);
   const validateEmailInput = useEmailValidation(emailInputRef, setErrorMessage);
+
+  const checkPasswordEquity = (passwordRef) => {
+    if (formData.password === formData.passwordRepeat) {
+      setArePasswordsUnequal(false);
+      setErrorMessage("");
+    } else {
+      passwordRef.current.focus();
+      setArePasswordsUnequal(true);
+      setErrorMessage(
+        "Passwords are not equal. Ensure that both are identical."
+      );
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
