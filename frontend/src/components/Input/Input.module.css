@@ -1,3 +1,33 @@
 input {
   caret-color: var(--background);
 }
+
+/* show invalid styles when passwords are unequal */
+input:valid:global(.invalid) {
+  animation: 0.4s 0.2s forwards change-invalid-input-color 1 normal;
+}
+
+@keyframes change-invalid-input-color {
+  100% {
+    /* set background color when autofill */
+    box-shadow: 0 0 0px 1000px #f87171 inset;
+    -webkit-box-shadow: 0 0 0px 1000px #f87171 inset;
+    border: 2px solid #dc2626;
+  }
+}
+
+@keyframes show-icon {
+  0% {
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    visibility: visible;
+    opacity: 1;
+  }
+}

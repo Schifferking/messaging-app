@@ -1,8 +1,7 @@
 .form-container {
   width: 33vw;
   margin: auto;
-  border: 5px solid var(--text);
-  border-radius: 5px;
+  border-radius: 10px;
   background-color: var(--primary);
   color: #000000;
 }
@@ -57,6 +56,9 @@ input {
 
 input:focus {
   background-color: var(--text);
+.error-message {
+  color: #400707;
+  text-align: center;
 }
 
 a:hover {

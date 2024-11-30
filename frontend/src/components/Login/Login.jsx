@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import Form from "../Form/Form";
+import FormChild from "../FormChild/FormChild";
 import EmailInput from "../EmailInput/EmailInput";
 import PasswordInput from "../PasswordInput/PasswordInput";
 import { useFocusEmailInput } from "../../hooks/useFocusEmailInput";

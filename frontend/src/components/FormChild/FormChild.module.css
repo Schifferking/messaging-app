@@ -3,6 +3,11 @@
   padding: 0.5em;
 }
 
+/* allow absolute position for icons */
+.form-child:has(input) {
+  position: relative;
+}
+
 input {
   border: 2px solid var(--secondary);
   border-radius: 10px;
@@ -12,4 +17,95 @@ input {
 
 input:focus {
   background-color: var(--text);
+}
+
+/* show "invalid" styles only when user begins to fill invalid data */
+input:not(:placeholder-shown) {
+  animation: 0.4s 0.2s forwards change-invalid-input-color 1 normal;
+}
+
+input:valid,
+:-webkit-autofill:valid {
+  animation: 0.4s 0.2s forwards change-valid-input-color 1 normal;
+}
+
+[class$="warning"],
+[class$="check-circle"] {
+  visibility: hidden;
+  position: absolute;
+  top: 28%;
+  right: 3.7em;
+  transform: translateY(-50%);
+}
+
+:global(.login-warning),
+:global(.login-check-circle) {
+  top: 50%;
+  right: 5.5em;
+}
+
+/* apply a different top value to email input icons to align them correctly */
+.form-child:nth-child(2) > .icons-container > [class$="warning"],
+.form-child:nth-child(2) > .icons-container > [class$="check-circle"] {
+  top: 50%;
+}
+
+/* show warning icon when input is "invalid" */
+input:not(:placeholder-shown) ~ .icons-container > [class$="warning"],
+input:valid.invalid ~ .icons-container > [class$="warning"],
+input:valid:global(.invalid) ~ .icons-container > [class$="warning"],
+input[type="email"]:not(:placeholder-shown)
+  ~ .icons-container
+  > [class$="warning"] {
+  animation: 0.4s 0.2s forwards show-icon 1 normal;
+}
+
+/* hide warning icon */
+input:valid ~ .icons-container > [class$="warning"],
+input[type="email"]:valid ~ .icons-container > [class$="warning"] {
+  animation: 0.4s 0.2s forwards show-icon 1 reverse;
+}
+
+/* show check icon */
+input:valid ~ .icons-container > [class$="check-circle"] {
+  animation: 0.4s 0.2s forwards show-icon 1 normal;
+}
+
+/* hide check icon when passwords are unequal */
+input:valid:global(.invalid) ~ .icons-container > [class$="check-circle"] {
+  animation: 0.4s 0.2s forwards show-icon 1 reverse;
+}
+
+@keyframes change-invalid-input-color {
+  100% {
+    /* set background color when autofill */
+    box-shadow: 0 0 0px 1000px #f87171 inset;
+    -webkit-box-shadow: 0 0 0px 1000px #f87171 inset;
+    border: 2px solid #dc2626;
+  }
+}
+
+@keyframes change-valid-input-color {
+  100% {
+    /* same as above */
+    box-shadow: 0 0 0px 1000px var(--accent) inset;
+    -webkit-box-shadow: 0 0 0px 1000px var(--accent) inset;
+    border: 2px solid #16a34a;
+  }
+}
+
+@keyframes show-icon {
+  0% {
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    visibility: visible;
+    opacity: 1;
+  }
 }

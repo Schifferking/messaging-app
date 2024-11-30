@@ -1,11 +1,14 @@
 import { forwardRef, useState } from "react";
+import PropTypes from "prop-types";
 import Input from "../Input/Input";
 import styles from "./PasswordInput.module.css";
 import Visibility from "../../assets/icons/visibility.svg?react";
 import VisibilityOff from "../../assets/icons/visibility-off.svg?react";
 
-const PasswordInput = forwardRef(function PasswordInput( ref, props)
-{
+const PasswordInput = forwardRef(function PasswordInput(
+  { arePasswordsUnequal, ...restProps } = props,
+  ref
+) {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   // toggle password visibility
   const handleClick = () => {
@@ -34,10 +37,11 @@ const PasswordInput = forwardRef(function PasswordInput( ref, props)
   return (
     <>
       <Input
+        arePasswordsUnequal={restProps.arePasswordsUnequal}
         type="password"
         minLength={8}
-        {...props}
         ref={ref}
+        {...restProps}
       ></Input>
 
       {isPasswordVisible ? (
@@ -58,5 +62,9 @@ const PasswordInput = forwardRef(function PasswordInput( ref, props)
     </>
   );
 });
+
+PasswordInput.propTypes = {
+  arePasswordsUnequal: PropTypes.bool,
+};
 
 export default PasswordInput;
