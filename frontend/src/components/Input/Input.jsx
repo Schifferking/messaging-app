@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 import "./Input.module.css";
 
 const Input = forwardRef(function Input(props, ref) {
-  const { arePasswordsUnequal, ...restProps } = props;
+  const { arePasswordsUnequal, isPasswordScoreLow, ...restProps } = props;
   return (
     <input
-      className={arePasswordsUnequal ? "invalid" : ""}
+      className={arePasswordsUnequal || isPasswordScoreLow ? "invalid" : ""}
       type={props.type}
       name={props.name}
       id={props.name}
@@ -21,6 +21,7 @@ const Input = forwardRef(function Input(props, ref) {
 
 Input.propTypes = {
   arePasswordsUnequal: PropTypes.bool,
+  isPasswordScoreLow: PropTypes.bool,
   name: PropTypes.string,
   type: PropTypes.string,
   value: PropTypes.string,

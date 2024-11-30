@@ -38,6 +38,7 @@ const PasswordInput = forwardRef(function PasswordInput(
     <>
       <Input
         arePasswordsUnequal={restProps.arePasswordsUnequal}
+        isPasswordScoreLow={isPasswordScoreLow}
         type="password"
         minLength={8}
         ref={ref}
@@ -65,6 +66,7 @@ const PasswordInput = forwardRef(function PasswordInput(
 
 PasswordInput.propTypes = {
   arePasswordsUnequal: PropTypes.bool,
+  isPasswordScoreLow: PropTypes.bool,
 };
 
 export default PasswordInput;
