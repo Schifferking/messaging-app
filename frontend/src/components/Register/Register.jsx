@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
+import zxcvbn from "zxcvbn";
 import Form from "../Form/Form";
 import FormChild from "../FormChild/FormChild";
 import EmailInput from "../EmailInput/EmailInput";
@@ -21,6 +22,9 @@ function Register() {
 
   const [errorMessage, setErrorMessage] = useState("");
   const [arePasswordsUnequal, setArePasswordsUnequal] = useState(false);
+  const [isPasswordScoreLow, setIsPasswordScoreLow] = useState(false);
+  const [isPasswordRepeatScoreLow, setIsPasswordRepeatScoreLow] =
+    useState(false);
   const checkPasswordInput = usePasswordValidation(setErrorMessage);
   const validateEmailInput = useEmailValidation(emailInputRef, setErrorMessage);
 
@@ -37,12 +41,113 @@ function Register() {
     }
   };
 
+  const getPasswordData = (passwordInputFieldName) => {
+    let passwordData = null;
+    if (passwordInputFieldName === "password") {
+      passwordData = {
+        passwordRef: passwordInputRef,
+        setStateFunction: setIsPasswordScoreLow,
+      };
+    } else {
+      passwordData = {
+        passwordRef: passwordRepeatInputRef,
+        setStateFunction: setIsPasswordRepeatScoreLow,
+      };
+    }
+
+    return passwordData;
+  };
+
+  const checkPasswordScore = (password, setStateFunction) => {
+    const passwordResult = zxcvbn(password);
+    if (passwordResult.score <= 2) {
+      setStateFunction(true);
+      setErrorMessage(passwordResult.feedback.warning);
+    } else {
+      setStateFunction(false);
+      setErrorMessage("");
+    }
+  };
+
+  const validateRegisterPasswordInput = (passwordInputField) => {
+    const { passwordRef, setStateFunction } =
+      getPasswordData(passwordInputField);
+
+    /* treating each unicode character as one, since some are composed of
+       two code points and the "length" property counts code points instead
+       of characters and some unicode characters have two code points */
+
+    const passwordActualLength = [...passwordRef.current.value].length;
+    checkPasswordInput(passwordRef, passwordActualLength);
+    checkPasswordScore(passwordRef.current.value, setStateFunction);
+
+    if (passwordRef.current.validity.valid && passwordActualLength >= 8) {
+      checkPasswordEquity(passwordRef);
+    }
+  };
+
+  const validateInput = (inputFieldName) => {
+    if (inputFieldName === "email") {
+      validateEmailInput(emailInputRef.current.validity);
+    } else {
+      validateRegisterPasswordInput(inputFieldName);
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setformData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
     }));
+
+    validateInput(name);
+  };
+
+  const validateForm = () => {
+    const emailInputValidity = emailInputRef.current.validity;
+    const actualPasswordLength = [...passwordInputRef.current.value].length;
+    const actualPasswordRepeatLength = [...passwordRepeatInputRef.current.value]
+      .length;
+    const passwordResult = zxcvbn(passwordInputRef.current.value);
+    const passwordRepeatResult = zxcvbn(passwordRepeatInputRef.current.value);
+
+    if (!emailInputValidity.valid) {
+      return validateEmailInput(emailInputValidity);
+    }
+
+    if (!passwordInputRef.current.validity.valid || actualPasswordLength < 8) {
+      return checkPasswordInput(passwordInputRef, actualPasswordLength);
+    }
+
+    if (passwordResult.score <= 2) {
+      return checkPasswordScore(formData.password, setIsPasswordScoreLow);
+    }
+
+    if (
+      !passwordRepeatInputRef.current.validity.valid ||
+      actualPasswordRepeatLength < 8
+    ) {
+      return checkPasswordInput(
+        passwordRepeatInputRef,
+        actualPasswordRepeatLength
+      );
+    }
+
+    if (passwordRepeatResult.score <= 2) {
+      return checkPasswordScore(
+        formData.passwordRepeat,
+        setIsPasswordRepeatScoreLow
+      );
+    }
+
+    checkPasswordEquity(passwordInputRef);
+
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    validateForm();
   };
 
   useEffect(() => {

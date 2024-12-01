@@ -1,10 +1,15 @@
 import PropTypes from "prop-types";
 
-function Form({ children }) {
-  return <form>{children}</form>;
+function Form({ handleSubmit, children }) {
+  return (
+    <form onSubmit={handleSubmit} noValidate>
+      {children}
+    </form>
+  );
 }
 
 Form.propTypes = {
+  handleSubmit: PropTypes.func,
   children: PropTypes.node,
 };
 
