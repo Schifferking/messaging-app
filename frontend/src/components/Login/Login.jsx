@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Form from "../Form/Form";
 import FormChild from "../FormChild/FormChild";
 import EmailInput from "../EmailInput/EmailInput";
@@ -17,15 +17,59 @@ function Login() {
     password: "",
   });
 
+  // consider using a reducer to remove the next 3 state variables
+  const [isInputModified, setIsInputModified] = useState(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const [lastInputModified, setLastInputModified] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const validateEmailInput = useEmailValidation(emailInputRef, setErrorMessage);
+  const checkPasswordInput = usePasswordValidation(setErrorMessage);
+
+  const validateInput = useCallback(
+    (inputFieldName) => {
+      if (inputFieldName === "email") {
+        validateEmailInput(emailInputRef.current.validity);
+      } else {
+        checkPasswordInput(passwordInputRef);
+      }
+    },
+    [checkPasswordInput, emailInputRef, validateEmailInput]
+  );
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+    setLastInputModified(name);
+    setIsFormSubmitted(false);
+    if (!isInputModified) {
+      setIsInputModified(true);
+    }
+
     setformData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
     }));
+
+    validateInput(name);
   };
+
+  const handleSubmit = (e) => {
+    setIsInputModified(false);
+    setIsFormSubmitted(true);
+    e.preventDefault();
+  };
+
+  // it updates errorMessage accordingly
+  useEffect(() => {
+    if (isInputModified) {
+      validateInput(lastInputModified);
+    }
+    }
+  }, [
+    errorMessage,
+    isInputModified,
+    lastInputModified,
+    validateInput,
+  ]);
 
   useEffect(() => {
 
