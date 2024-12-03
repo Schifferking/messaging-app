@@ -8,6 +8,40 @@
   position: relative;
 }
 
+/* header */
+.form-child:first-child {
+  font-size: 1.1em;
+  grid-template-columns: 1fr;
+  justify-self: center;
+}
+
+/* email input */
+.form-child:nth-child(2) {
+  grid-template-columns: 0.45fr 1fr 0.05fr;
+}
+
+/* password inputs */
+.form-child:nth-child(3),
+.form-child:nth-child(4) {
+  grid-template-columns: 0.45fr 1fr 0.05fr;
+  grid-template-rows: repeat(2, 0.5fr);
+}
+
+/* error message and submit button */
+.form-child:nth-child(5),
+.form-child:nth-child(6) {
+  grid-template-columns: 1fr;
+}
+
+.form-child:nth-child(6) {
+  place-self: center;
+}
+
+/* link */
+.form-child:last-child {
+  grid-template-columns: 0.5fr 1fr;
+}
+
 input {
   border: 2px solid var(--secondary);
   border-radius: 10px;

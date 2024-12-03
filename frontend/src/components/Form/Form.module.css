@@ -3,59 +3,11 @@
   margin: auto;
   border-radius: 10px;
   background-color: var(--primary);
+  box-shadow: 0 0 32px var(--primary);
+  -webkit-box-shadow: 0 0 32px var(--primary);
   color: #000000;
 }
 
-.form-link {
-  color: #000000;
-  text-decoration-color: #000000;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-child,
-input,
-.form-button {
-  padding: 0.5em;
-}
-
-.form-child {
-  display: flex;
-  justify-content: flex-end;
-}
-
-/* header */
-.form-child:first-child {
-  margin-bottom: 1em;
-}
-
-.form-child:first-child {
-  justify-content: center;
-}
-
-/* link */
-.form-child:last-child {
-  justify-content: flex-start;
-  gap: 10px;
-}
-
-label {
-  padding: 0.5em 1em 0.5em 0;
-  flex: 1;
-}
-
-input {
-  flex: 2;
-  border: 2px solid #000000;
-  border-radius: 10px;
-  background-color: var(--text);
-}
-
-input:focus {
-  background-color: var(--text);
 .error-message {
   color: #400707;
   text-align: center;
@@ -67,23 +19,23 @@ a:hover {
 }
 
 .form-button {
-  width: 33%;
+  padding: 0.5em;
+  border: 2px solid var(--secondary);
   border-radius: 10px;
   background-color: var(--text);
 }
 
 .form-button:hover,
 .form-button:active {
-  animation: 0.4s 0.2s change-color infinite normal;
+  animation: 0.4s 0.2s forwards change-button-color 1 normal;
 }
 
-@keyframes change-color {
-  0% {
-    background-color: var(--background);
-    border: 2px solid var(--text);
-    color: var(--text);
-  }
+.form-link {
+  color: #000000;
+  text-decoration-color: #000000;
+}
 
+@keyframes change-button-color {
   100% {
     background-color: var(--background);
     border: 2px solid var(--text);

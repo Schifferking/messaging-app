@@ -154,33 +154,61 @@ function Register() {
 
   return (
     <div className={styles["form-container"]}>
-      <Form>
-        <div className={styles["form-child"]}>
-          <h2>Create an account</h2>
-        </div>
-        <div className={styles["form-child"]}>
-          <label htmlFor="email">Email *</label>
-          <input type="email" name="email" id="email" ref={inputRef} />
-        </div>
-        <div className={styles["form-child"]}>
-          <label htmlFor="password">Password *</label>
-          <input type="password" name="password" id="password" />
-        </div>
-        <div className={styles["form-child"]}>
-          <label htmlFor="repeat-password">Repeat password *</label>
-          <input type="password" name="repeat-password" id="repeat-password" />
-        </div>
-        <div className={styles["form-child"]}>
+      <Form handleSubmit={handleSubmit}>
+        <FormChild>
+          <h1>Create an account</h1>
+        </FormChild>
+        <FormChild isInput={true}>
+          <label className={styles["input-label"]} htmlFor="email">
+            <strong>Email *</strong>
+          </label>
+          <EmailInput
+            name="email"
+            onChange={handleChange}
+            ref={emailInputRef}
+            value={formData.email}
+          />
+        </FormChild>
+        <FormChild isInput={true}>
+          <label className={styles["input-label"]} htmlFor="password">
+            <strong>Password *</strong>
+          </label>
+          <PasswordInput
+            arePasswordsUnequal={arePasswordsUnequal}
+            isPasswordScoreLow={isPasswordScoreLow}
+            name="password"
+            onChange={handleChange}
+            ref={passwordInputRef}
+            value={formData.password}
+          ></PasswordInput>
+        </FormChild>
+        <FormChild isInput={true}>
+          <label className={styles["input-label"]} htmlFor="passwordRepeat">
+            <strong>Repeat password *</strong>
+          </label>
+          <PasswordInput
+            arePasswordsUnequal={arePasswordsUnequal}
+            isPasswordScoreLow={isPasswordRepeatScoreLow}
+            name="passwordRepeat"
+            onChange={handleChange}
+            ref={passwordRepeatInputRef}
+            value={formData.passwordRepeat}
+          ></PasswordInput>
+        </FormChild>
+        <FormChild>
+          <span className={styles["error-message"]}>{errorMessage}</span>
+        </FormChild>
+        <FormChild>
           <button className={styles["form-button"]} type="submit">
             Continue
           </button>
-        </div>
-        <div className={styles["form-child"]}>
+        </FormChild>
+        <FormChild>
           <span>Already have an account? </span>
           <Link to="../login" className={styles["form-link"]}>
             Click here to log in
           </Link>
-        </div>
+        </FormChild>
       </Form>
     </div>
   );
