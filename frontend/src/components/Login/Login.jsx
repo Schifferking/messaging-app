@@ -75,29 +75,42 @@ function Login() {
 
   return (
     <div className={styles["form-container"]}>
-      <Form>
-        <div className={styles["form-child"]}>
-          <h2>Log in</h2>
-        </div>
-        <div className={styles["form-child"]}>
+      <Form handleSubmit={handleSubmit}>
+        <FormChild>
+          <h1>Log in</h1>
+        </FormChild>
+        <FormChild isInput={true}>
           <label htmlFor="email">Email *</label>
-          <input type="email" name="email" id="email" ref={inputRef} />
-        </div>
-        <div className={styles["form-child"]}>
+          <EmailInput
+            name="email"
+            onChange={handleChange}
+            ref={emailInputRef}
+            value={formData.email}
+          />
+        </FormChild>
+        <FormChild isInput={true}>
           <label htmlFor="password">Password *</label>
-          <input type="password" name="password" id="password" />
-        </div>
-        <div className={styles["form-child"]}>
+          <PasswordInput
+            name="password"
+            onChange={handleChange}
+            ref={passwordInputRef}
+            value={formData.password}
+          />
+        </FormChild>
+        <FormChild>
+          <span className={styles["error-message"]}>{errorMessage}</span>
+        </FormChild>
+        <FormChild>
           <button className={styles["form-button"]} type="submit">
             Log in
           </button>
-        </div>
-        <div className={styles["form-child"]}>
+        </FormChild>
+        <FormChild>
           <span>{"Don't"} have an account? </span>
           <Link to="../register" className={styles["form-link"]}>
             Click here to create one
           </Link>
-        </div>
+        </FormChild>
       </Form>
     </div>
   );

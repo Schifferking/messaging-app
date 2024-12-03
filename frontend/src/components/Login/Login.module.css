@@ -1,7 +1,41 @@
 @import url("../Form/Form.module.css");
 
-/* centering submit button */
-.form-child:nth-child(4) {
-  flex-direction: row;
-  justify-content: center;
+.form-container > form {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 0.5fr repeat(2, 1fr) 0.5fr 1fr 0.5fr;
+}
+
+/* email input */
+.form-container > form > div:nth-child(2) {
+  grid-row: 2;
+  grid-template-columns: 0.25fr 1fr 0.1fr;
+}
+
+/* password input */
+.form-container > form > div:nth-child(3) {
+  grid-row: 3;
+  grid-template-columns: 0.25fr 1fr repeat(2, 0.05fr);
+  grid-template-rows: unset;
+}
+
+/* error message */
+.form-container > form > div:nth-child(4) {
+  grid-row: 4;
+  grid-template-columns: 1fr;
+  grid-template-rows: unset;
+}
+
+/* submit button */
+.form-container > form > div:nth-child(5) {
+  grid-row: 5;
+  place-self: center;
+}
+
+/* register link */
+.form-container > form > div:nth-child(6) {
+  grid-template-columns: 0.3fr 0.7fr;
+  gap: 8px;
+  place-self: unset;
+}
 }
