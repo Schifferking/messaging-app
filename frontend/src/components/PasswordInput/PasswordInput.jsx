@@ -1,6 +1,7 @@
 import { forwardRef, useContext, useState } from "react";
 import PropTypes from "prop-types";
 import Input from "../Input/Input";
+import PasswordStrengthMeter from "../PasswordStrengthMeter/PasswordStrengthMeter";
 import { LoginContext } from "../Login/Login";
 import { RegisterContext } from "../Register/Register";
 import styles from "./PasswordInput.module.css";
@@ -8,7 +9,7 @@ import Visibility from "../../assets/icons/visibility.svg?react";
 import VisibilityOff from "../../assets/icons/visibility-off.svg?react";
 
 const PasswordInput = forwardRef(function PasswordInput(
-  { arePasswordsUnequal, ...restProps } = props,
+  { isPasswordScoreLow = false, ...restProps },
   ref
 ) {
   const { login } = useContext(LoginContext);
@@ -65,6 +66,10 @@ const PasswordInput = forwardRef(function PasswordInput(
           tabIndex="0"
         ></VisibilityOff>
       )}
+
+      {register !== "" ? (
+        <PasswordStrengthMeter password={restProps.value} />
+      ) : null}
     </>
   );
 });
@@ -72,6 +77,7 @@ const PasswordInput = forwardRef(function PasswordInput(
 PasswordInput.propTypes = {
   arePasswordsUnequal: PropTypes.bool,
   isPasswordScoreLow: PropTypes.bool,
+  value: PropTypes.string,
 };
 
 export default PasswordInput;
