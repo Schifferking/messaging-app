@@ -48,3 +48,8 @@ end
 
 
 gem "devise", "~> 4.9"
+
+# Use Zxcvbn-rb to calculate password strength
+# note: do not use "zxcbn-ruby" gem because "zxcvbn-ruby#test" returns a different password score compared to the one
+# from the javascript library at the moment of writing this
+gem "zxcvbn"
