@@ -1,6 +1,8 @@
-import { forwardRef, useState } from "react";
+import { forwardRef, useContext, useState } from "react";
 import PropTypes from "prop-types";
 import Input from "../Input/Input";
+import { LoginContext } from "../Login/Login";
+import { RegisterContext } from "../Register/Register";
 import styles from "./PasswordInput.module.css";
 import Visibility from "../../assets/icons/visibility.svg?react";
 import VisibilityOff from "../../assets/icons/visibility-off.svg?react";
@@ -9,7 +11,10 @@ const PasswordInput = forwardRef(function PasswordInput(
   { arePasswordsUnequal, ...restProps } = props,
   ref
 ) {
+  const { login } = useContext(LoginContext);
+  const { register } = useContext(RegisterContext);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const classNamePrefix = login || register;
   // toggle password visibility
   const handleClick = () => {
     if (isPasswordVisible) {
@@ -47,14 +52,14 @@ const PasswordInput = forwardRef(function PasswordInput(
 
       {isPasswordVisible ? (
         <Visibility
-          className={styles["visibility"]}
+          className={styles[`${classNamePrefix}-visibility`]}
           onClick={handleClick}
           onKeyDown={handleKeyDown}
           tabIndex="0"
         ></Visibility>
       ) : (
         <VisibilityOff
-          className={styles["visibility-off"]}
+          className={styles[`${classNamePrefix}-visibility-off`]}
           onClick={handleClick}
           onKeyDown={handleKeyDown}
           tabIndex="0"

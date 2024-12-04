@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
 import zxcvbn from "zxcvbn";
 import Form from "../Form/Form";
 import FormChild from "../FormChild/FormChild";
@@ -9,6 +9,8 @@ import { useFocusEmailInput } from "../../hooks/useFocusEmailInput";
 import { usePasswordValidation } from "../../hooks/usePasswordValidation";
 import { useEmailValidation } from "../../hooks/useEmailValidation";
 import styles from "./Register.module.css";
+
+export const RegisterContext = createContext({ register: "" });
 
 function Register() {
   const emailInputRef = useFocusEmailInput();
@@ -153,63 +155,65 @@ function Register() {
   useEffect(() => {
 
   return (
-    <div className={styles["form-container"]}>
-      <Form handleSubmit={handleSubmit}>
-        <FormChild>
-          <h1>Create an account</h1>
-        </FormChild>
-        <FormChild isInput={true}>
-          <label className={styles["input-label"]} htmlFor="email">
-            <strong>Email *</strong>
-          </label>
-          <EmailInput
-            name="email"
-            onChange={handleChange}
-            ref={emailInputRef}
-            value={formData.email}
-          />
-        </FormChild>
-        <FormChild isInput={true}>
-          <label className={styles["input-label"]} htmlFor="password">
-            <strong>Password *</strong>
-          </label>
-          <PasswordInput
-            arePasswordsUnequal={arePasswordsUnequal}
-            isPasswordScoreLow={isPasswordScoreLow}
-            name="password"
-            onChange={handleChange}
-            ref={passwordInputRef}
-            value={formData.password}
-          ></PasswordInput>
-        </FormChild>
-        <FormChild isInput={true}>
-          <label className={styles["input-label"]} htmlFor="passwordRepeat">
-            <strong>Repeat password *</strong>
-          </label>
-          <PasswordInput
-            arePasswordsUnequal={arePasswordsUnequal}
-            isPasswordScoreLow={isPasswordRepeatScoreLow}
-            name="passwordRepeat"
-            onChange={handleChange}
-            ref={passwordRepeatInputRef}
-            value={formData.passwordRepeat}
-          ></PasswordInput>
-        </FormChild>
-        <FormChild>
-          <span className={styles["error-message"]}>{errorMessage}</span>
-        </FormChild>
-        <FormChild>
-          <button className={styles["form-button"]} type="submit">
-            Continue
-          </button>
-        </FormChild>
-        <FormChild>
-          <span>Already have an account? </span>
-          <Link to="../login" className={styles["form-link"]}>
-            Click here to log in
-          </Link>
-        </FormChild>
-      </Form>
+    <div className={styles["register-form-container"]}>
+      <RegisterContext.Provider value={{ register: "register" }}>
+        <Form handleSubmit={handleSubmit}>
+          <FormChild>
+            <h1>Create an account</h1>
+          </FormChild>
+          <FormChild isInput={true}>
+            <label className={styles["input-label"]} htmlFor="email">
+              <strong>Email *</strong>
+            </label>
+            <EmailInput
+              name="email"
+              onChange={handleChange}
+              ref={emailInputRef}
+              value={formData.email}
+            />
+          </FormChild>
+          <FormChild isInput={true}>
+            <label className={styles["input-label"]} htmlFor="password">
+              <strong>Password *</strong>
+            </label>
+            <PasswordInput
+              arePasswordsUnequal={arePasswordsUnequal}
+              isPasswordScoreLow={isPasswordScoreLow}
+              name="password"
+              onChange={handleChange}
+              ref={passwordInputRef}
+              value={formData.password}
+            ></PasswordInput>
+          </FormChild>
+          <FormChild isInput={true}>
+            <label className={styles["input-label"]} htmlFor="passwordRepeat">
+              <strong>Repeat password *</strong>
+            </label>
+            <PasswordInput
+              arePasswordsUnequal={arePasswordsUnequal}
+              isPasswordScoreLow={isPasswordRepeatScoreLow}
+              name="passwordRepeat"
+              onChange={handleChange}
+              ref={passwordRepeatInputRef}
+              value={formData.passwordRepeat}
+            ></PasswordInput>
+          </FormChild>
+          <FormChild>
+            <span className={styles["error-message"]}>{errorMessage}</span>
+          </FormChild>
+          <FormChild>
+            <button className={styles["form-button"]} type="submit">
+              Continue
+            </button>
+          </FormChild>
+          <FormChild>
+            <span>Already have an account? </span>
+            <Link to="../login" className={styles["form-link"]}>
+              Click here to log in
+            </Link>
+          </FormChild>
+        </Form>
+      </RegisterContext.Provider>
     </div>
   );
 }

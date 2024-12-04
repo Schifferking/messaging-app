@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { createContext, useCallback, useEffect, useRef, useState } from "react";
 import Form from "../Form/Form";
 import FormChild from "../FormChild/FormChild";
 import EmailInput from "../EmailInput/EmailInput";
@@ -8,6 +8,8 @@ import { useFocusEmailInput } from "../../hooks/useFocusEmailInput";
 import { useEmailValidation } from "../../hooks/useEmailValidation";
 import { usePasswordValidation } from "../../hooks/usePasswordValidation";
 import styles from "./Login.module.css";
+
+export const LoginContext = createContext({ login: "" });
 
 function Login() {
   const emailInputRef = useFocusEmailInput();
@@ -74,44 +76,46 @@ function Login() {
   useEffect(() => {
 
   return (
-    <div className={styles["form-container"]}>
-      <Form handleSubmit={handleSubmit}>
-        <FormChild>
-          <h1>Log in</h1>
-        </FormChild>
-        <FormChild isInput={true}>
-          <label htmlFor="email">Email *</label>
-          <EmailInput
-            name="email"
-            onChange={handleChange}
-            ref={emailInputRef}
-            value={formData.email}
-          />
-        </FormChild>
-        <FormChild isInput={true}>
-          <label htmlFor="password">Password *</label>
-          <PasswordInput
-            name="password"
-            onChange={handleChange}
-            ref={passwordInputRef}
-            value={formData.password}
-          />
-        </FormChild>
-        <FormChild>
-          <span className={styles["error-message"]}>{errorMessage}</span>
-        </FormChild>
-        <FormChild>
-          <button className={styles["form-button"]} type="submit">
-            Log in
-          </button>
-        </FormChild>
-        <FormChild>
-          <span>{"Don't"} have an account? </span>
-          <Link to="../register" className={styles["form-link"]}>
-            Click here to create one
-          </Link>
-        </FormChild>
-      </Form>
+    <div className={styles["login-form-container"]}>
+      <LoginContext.Provider value={{ login: "login" }}>
+        <Form handleSubmit={handleSubmit}>
+          <FormChild>
+            <h1>Log in</h1>
+          </FormChild>
+          <FormChild isInput={true}>
+            <label htmlFor="email">Email *</label>
+            <EmailInput
+              name="email"
+              onChange={handleChange}
+              ref={emailInputRef}
+              value={formData.email}
+            />
+          </FormChild>
+          <FormChild isInput={true}>
+            <label htmlFor="password">Password *</label>
+            <PasswordInput
+              name="password"
+              onChange={handleChange}
+              ref={passwordInputRef}
+              value={formData.password}
+            />
+          </FormChild>
+          <FormChild>
+            <span className={styles["error-message"]}>{errorMessage}</span>
+          </FormChild>
+          <FormChild>
+            <button className={styles["form-button"]} type="submit">
+              Log in
+            </button>
+          </FormChild>
+          <FormChild>
+            <span>{"Don't"} have an account? </span>
+            <Link to="../register" className={styles["form-link"]}>
+              Click here to create one
+            </Link>
+          </FormChild>
+        </Form>
+      </LoginContext.Provider>
     </div>
   );
 }

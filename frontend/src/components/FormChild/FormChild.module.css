@@ -196,4 +196,19 @@ input:valid:global(.invalid) ~ .icons-container > [class$="check-circle"] {
     justify-self: center;
     grid-column: 1/3;
   }
+
+  /* adjusting register password input icons position */
+  input:not(:placeholder-shown) ~ .icons-container > [class$="warning"],
+  input:valid ~ .icons-container > [class$="check-circle"] {
+    top: 41%;
+    right: 2.5em;
+  }
+
+  /* adjusting email input and login input icons position */
+  .form-child:nth-child(2) > .icons-container > [class$="warning"],
+  .form-child:nth-child(2) > .icons-container > [class$="check-circle"],
+  input:not(:placeholder-shown) ~ .icons-container > :global(.login-warning),
+  input:valid ~ .icons-container > :global(.login-check-circle) {
+    top: 65%;
+  }
 }

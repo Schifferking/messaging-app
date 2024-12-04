@@ -1,79 +1,79 @@
 @import url("../Form/Form.module.css");
 
-.form-container > form {
+.login-form-container > form {
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 0.5fr repeat(2, 1fr) 0.5fr 1fr 0.5fr;
 }
 
 /* email input */
-.form-container > form > div:nth-child(2) {
+.login-form-container > form > div:nth-child(2) {
   grid-row: 2;
   grid-template-columns: 0.25fr 1fr 0.1fr;
 }
 
 /* password input */
-.form-container > form > div:nth-child(3) {
+.login-form-container > form > div:nth-child(3) {
   grid-row: 3;
   grid-template-columns: 0.25fr 1fr repeat(2, 0.05fr);
   grid-template-rows: unset;
 }
 
 /* error message */
-.form-container > form > div:nth-child(4) {
+.login-form-container > form > div:nth-child(4) {
   grid-row: 4;
   grid-template-columns: 1fr;
   grid-template-rows: unset;
 }
 
 /* submit button */
-.form-container > form > div:nth-child(5) {
+.login-form-container > form > div:nth-child(5) {
   grid-row: 5;
   place-self: center;
 }
 
 /* register link */
-.form-container > form > div:nth-child(6) {
+.login-form-container > form > div:nth-child(6) {
   grid-template-columns: 0.3fr 0.7fr;
   gap: 8px;
   place-self: unset;
 }
 
 @media (max-width: 500px) {
-  .form-container {
+  .login-form-container {
     max-width: 90vw;
   }
 
-  .form-container > form {
+  .login-form-container > form {
     grid-template-columns: 1fr;
     grid-template-rows: 0.4fr repeat(2, 1fr) 0.3fr repeat(2, 0.5fr);
   }
 
   /* email input */
-  .form-container > form > div:nth-child(2) {
+  .login-form-container > form > div:nth-child(2) {
     grid-template-columns: 1fr;
     grid-row: 2/3;
   }
 
   /* password input */
-  .form-container > form > div:nth-child(3) {
+  .login-form-container > form > div:nth-child(3) {
     grid-template-columns: 1fr;
     grid-row: 3/4;
   }
 
   /* error message */
-  .form-container > form > div:nth-child(4) {
+  .login-form-container > form > div:nth-child(4) {
     grid-row: 4/5;
     grid-template-rows: 1fr;
   }
 
   /* submit button */
-  .form-container > form > div:nth-child(5) {
+  .login-form-container > form > div:nth-child(5) {
     grid-column: 1;
   }
 
   /* register link */
-  .form-container > form > div:nth-child(6) {
+  .login-form-container > form > div:nth-child(6) {
     grid-row: 6/7;
     grid-template-columns: 1fr;
     grid-template-rows: 0.5fr 0.1fr;
