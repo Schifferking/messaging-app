@@ -8,11 +8,21 @@
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
     # update this when deploying
-    origins "http://localhost:5173/"
+    origins "http://localhost:5173"
 
-    # modify this later
-    resource "*",
-      headers: :any,
-      methods: [:get, :post, :put, :patch, :delete, :options, :head]
+    # add update and destroy to methods when implementing account editions or deletions
+    resource '/signup',
+    :headers => :any,
+    :methods => [:post]
+
+    # allow post requests to log in users
+    resource '/login',
+    :headers => :any,
+    :methods => [:post]
+
+    # only allow delete requests
+    resource '/logout',
+    :headers => :any,
+    :methods => [:delete]
   end
 end
