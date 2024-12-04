@@ -1,5 +1,5 @@
 .form-container {
-  width: 33vw;
+  min-width: 40vw;
   margin: auto;
   border-radius: 10px;
   background-color: var(--primary);
@@ -43,35 +43,18 @@ a:hover {
   }
 }
 
-@media (max-width: 1200px) {
   .form-container {
-    width: 90vw;
+@media (max-width: 1199px) {
+    min-width: 90vw;
   }
 
-  .form-child:first-child {
-    margin-bottom: 0.5em;
-  }
-
-  input {
-    width: 50%;
-    flex: 1;
-  }
-}
-
-@media (max-width: 500px) {
-  form {
-    gap: 20px;
-  }
-
-  .form-child:not(:first-child) {
-    flex-direction: column;
-  }
-
-  input {
-    width: 100%;
-  }
-
-  .form-button {
-    width: 50%;
+  /* this style applies to devices between 501px and 1199px
+     e.g. (phones in horizontal mode, tablet or laptop screens) */
+  @media (min-width: 501px) {
+    /* prevent form container from being next to top screen edge */
+    .login-form-container,
+    .register-form-container {
+      margin: 1em auto;
+    }
   }
 }

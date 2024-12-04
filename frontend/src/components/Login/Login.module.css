@@ -38,4 +38,44 @@
   gap: 8px;
   place-self: unset;
 }
+
+@media (max-width: 500px) {
+  .form-container {
+    max-width: 90vw;
+  }
+
+  .form-container > form {
+    grid-template-columns: 1fr;
+    grid-template-rows: 0.4fr repeat(2, 1fr) 0.3fr repeat(2, 0.5fr);
+  }
+
+  /* email input */
+  .form-container > form > div:nth-child(2) {
+    grid-template-columns: 1fr;
+    grid-row: 2/3;
+  }
+
+  /* password input */
+  .form-container > form > div:nth-child(3) {
+    grid-template-columns: 1fr;
+    grid-row: 3/4;
+  }
+
+  /* error message */
+  .form-container > form > div:nth-child(4) {
+    grid-row: 4/5;
+    grid-template-rows: 1fr;
+  }
+
+  /* submit button */
+  .form-container > form > div:nth-child(5) {
+    grid-column: 1;
+  }
+
+  /* register link */
+  .form-container > form > div:nth-child(6) {
+    grid-row: 6/7;
+    grid-template-columns: 1fr;
+    grid-template-rows: 0.5fr 0.1fr;
+  }
 }
