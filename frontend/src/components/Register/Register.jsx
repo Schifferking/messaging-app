@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { createContext, useEffect, useRef, useState } from "react";
+import axios from "axios";
 import zxcvbn from "zxcvbn";
 import Form from "../Form/Form";
 import FormChild from "../FormChild/FormChild";
@@ -106,6 +107,30 @@ function Register() {
     validateInput(name);
   };
 
+  const makePostRequest = () => {
+    const frontEndUrl = "http://localhost:5173";
+    const backEndBaseUrl = "http://localhost:3000/";
+    const headers = {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "Access-Control-Allow-Origin": frontEndUrl,
+      Vary: "Origin",
+    };
+
+    axios
+      .post(
+        `${backEndBaseUrl}/signup`,
+        {
+          formData,
+        },
+        { headers: headers }
+      )
+      .then((response) => {
+        if (response.data.error) {
+          return setErrorMessage(response.data.error.email[1]);
+        }});
+  };
+
   const validateForm = () => {
     const emailInputValidity = emailInputRef.current.validity;
     const actualPasswordLength = [...passwordInputRef.current.value].length;
@@ -145,6 +170,7 @@ function Register() {
 
     checkPasswordEquity(passwordInputRef);
 
+    makePostRequest();
   };
 
   const handleSubmit = (e) => {

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { createContext, useCallback, useEffect, useRef, useState } from "react";
+import axios from "axios";
 import Form from "../Form/Form";
 import FormChild from "../FormChild/FormChild";
 import EmailInput from "../EmailInput/EmailInput";
@@ -54,22 +55,54 @@ function Login() {
     validateInput(name);
   };
 
+  const makePostRequest = useCallback(() => {
+    const frontEndUrl = "http://localhost:5173";
+    const backEndBaseUrl = "http://localhost:3000/";
+    const headers = {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "Access-Control-Allow-Origin": frontEndUrl,
+      Vary: "Origin",
+    };
+
+    axios
+      .post(
+        `${backEndBaseUrl}/login`,
+        {
+          formData,
+        },
+        { headers: headers }
+      )
+      .then((response) => {
+        if (response.data.error) {
+          return setErrorMessage(response.data.error);
+        }});
+  }, [formData]);
+
+  const validateForm = useCallback(() => {
+    makePostRequest();
+  }, [makePostRequest]);
+
   const handleSubmit = (e) => {
     setIsInputModified(false);
     setIsFormSubmitted(true);
     e.preventDefault();
+    validateForm();
   };
 
   // it updates errorMessage accordingly
   useEffect(() => {
     if (isInputModified) {
       validateInput(lastInputModified);
-    }
+    } else if (isFormSubmitted) {
+      validateForm();
     }
   }, [
     errorMessage,
+    isFormSubmitted,
     isInputModified,
     lastInputModified,
+    validateForm,
     validateInput,
   ]);
 

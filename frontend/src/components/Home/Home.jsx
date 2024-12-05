@@ -1,11 +1,29 @@
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import styles from "./Home.module.css";
 
 function Home() {
   const navigate = useNavigate();
+  /* logs out user */
+  const makeDeleteRequest = () => {
+    const frontEndUrl = "http://localhost:5173";
+    const backEndBaseUrl = "http://localhost:3000/";
+    const headers = {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "Access-Control-Allow-Origin": frontEndUrl,
+      Vary: "Origin",
+    };
 
   const goTo = (page) => {
     navigate(`../${page}`);
+    axios
+      .delete(`${backEndBaseUrl}logout`, { headers: headers })
+      .then((response) => {
+        if (response.status === 204) {
+          // user logs out
+        }
+      });
   };
 
   return (
