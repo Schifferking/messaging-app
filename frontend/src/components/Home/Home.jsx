@@ -1,9 +1,9 @@
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useGoToPage } from "../../hooks/useGoToPage";
 import styles from "./Home.module.css";
 
 function Home() {
-  const navigate = useNavigate();
+  const goToPage = useGoToPage();
   /* logs out user */
   const makeDeleteRequest = () => {
     const frontEndUrl = "http://localhost:5173";
@@ -15,13 +15,11 @@ function Home() {
       Vary: "Origin",
     };
 
-  const goTo = (page) => {
-    navigate(`../${page}`);
     axios
       .delete(`${backEndBaseUrl}logout`, { headers: headers })
       .then((response) => {
         if (response.status === 204) {
-          // user logs out
+          goToPage("login");
         }
       });
   };

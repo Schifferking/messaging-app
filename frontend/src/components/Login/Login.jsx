@@ -8,11 +8,13 @@ import PasswordInput from "../PasswordInput/PasswordInput";
 import { useFocusEmailInput } from "../../hooks/useFocusEmailInput";
 import { useEmailValidation } from "../../hooks/useEmailValidation";
 import { usePasswordValidation } from "../../hooks/usePasswordValidation";
+import { useGoToPage } from "../../hooks/useGoToPage";
 import styles from "./Login.module.css";
 
 export const LoginContext = createContext({ login: "" });
 
 function Login() {
+  const goToPage = useGoToPage();
   const emailInputRef = useFocusEmailInput();
   const passwordInputRef = useRef(null);
   const [formData, setformData] = useState({
@@ -76,8 +78,14 @@ function Login() {
       .then((response) => {
         if (response.data.error) {
           return setErrorMessage(response.data.error);
-        }});
-  }, [formData]);
+        }
+
+        // user logs in
+        if (response.status === 200) {
+          goToPage("/dashboard", true);
+        }
+      });
+  }, [formData, goToPage]);
 
   const validateForm = useCallback(() => {
     makePostRequest();

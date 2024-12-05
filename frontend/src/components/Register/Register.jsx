@@ -9,11 +9,13 @@ import PasswordInput from "../PasswordInput/PasswordInput";
 import { useFocusEmailInput } from "../../hooks/useFocusEmailInput";
 import { usePasswordValidation } from "../../hooks/usePasswordValidation";
 import { useEmailValidation } from "../../hooks/useEmailValidation";
+import { useGoToPage } from "../../hooks/useGoToPage";
 import styles from "./Register.module.css";
 
 export const RegisterContext = createContext({ register: "" });
 
 function Register() {
+  const goToPage = useGoToPage();
   const emailInputRef = useFocusEmailInput();
   const passwordInputRef = useRef(null);
   const passwordRepeatInputRef = useRef(null);
@@ -128,7 +130,13 @@ function Register() {
       .then((response) => {
         if (response.data.error) {
           return setErrorMessage(response.data.error.email[1]);
-        }});
+        }
+
+        // user registered successfully
+        if (response.status === 200) {
+          goToPage("/dashboard", true);
+        }
+      });
   };
 
   const validateForm = () => {
