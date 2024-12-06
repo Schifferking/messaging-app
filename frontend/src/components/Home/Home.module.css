@@ -17,6 +17,13 @@ footer {
   gap: 15px;
 }
 
+.user-container {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  gap: 16px;
+}
+
 .nav-button {
   padding: 1em 1.5em;
   border: 1px solid var(--background);
@@ -25,23 +32,17 @@ footer {
 
 .login {
   margin-left: auto;
-  background-color: var(--secondary);
-  color: var(--text);
 }
 
-.login:focus,
-.login:hover {
-  animation: 0.4s 0.2s change-login-border infinite normal;
+.login,
+.logout {
+  background-color: var(--secondary);
+  color: var(--text);
 }
 
 .register {
   background-color: var(--primary);
   color: #000000;
-}
-
-.register:focus,
-.register:hover {
-  animation: 0.4s 0.2s change-register-border infinite normal;
 }
 
 .content > p {
@@ -69,11 +70,17 @@ footer {
     gap: 20px;
   }
 
+  .user-container {
+    flex-direction: column;
+    margin-left: unset;
+  }
+
   .nav-button {
     padding: 0.75em 0.37em;
   }
 
-  .login {
+  .login,
+  .logout {
     margin-left: 0;
   }
 
@@ -93,29 +100,5 @@ footer {
     display: grid;
     grid-template-columns: 1fr 4fr;
     grid-template-rows: 1fr 1fr 1fr;
-  }
-}
-
-@keyframes change-login-border {
-  0% {
-    border: 2px solid var(--text);
-    outline: 2px solid var(--text);
-  }
-
-  100% {
-    border: 2px solid var(--text);
-    outline: 2px solid var(--text);
-  }
-}
-
-@keyframes change-register-border {
-  0% {
-    border: 2px solid var(--secondary);
-    outline: 2px solid var(--secondary);
-  }
-
-  100% {
-    border: 2px solid var(--secondary);
-    outline: 2px solid var(--secondary);
   }
 }

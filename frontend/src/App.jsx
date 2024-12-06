@@ -1,10 +1,20 @@
+import { useEffect, useState } from "react";
+import { Outlet } from "react-router-dom";
 import "./App.css";
-import Home from "./components/Home/Home";
 
 function App() {
+  const [userEmail, setUserEmail] = useState(() => {
+    const storedUserEmail = sessionStorage.getItem("userEmail");
+    return storedUserEmail || null;
+  });
+
+  useEffect(() => {
+    sessionStorage.getItem("userEmail", userEmail);
+  }, [userEmail]);
+
   return (
     <>
-      <Home></Home>
+      <Outlet context={[userEmail, setUserEmail]} />
     </>
   );
 }

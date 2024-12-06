@@ -4,9 +4,9 @@ This is a simple implementation of a messaging app like Whatsapp, Discord, Teleg
 
 It uses Ruby on Rails as an API backend and React as frontend.
 
-The main features are
+Main features are:
 
-- Authorization
+- User authentication and authorization
 - sending messages to another users
 - customizing a user profile
 

@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
 import { createContext, useCallback, useEffect, useRef, useState } from "react";
+import { Link, useOutletContext } from "react-router-dom";
 import axios from "axios";
 import Form from "../Form/Form";
 import FormChild from "../FormChild/FormChild";
@@ -14,6 +14,7 @@ import styles from "./Login.module.css";
 export const LoginContext = createContext({ login: "" });
 
 function Login() {
+  const [userEmail, setUserEmail] = useOutletContext();
   const goToPage = useGoToPage();
   const emailInputRef = useFocusEmailInput();
   const passwordInputRef = useRef(null);
@@ -82,10 +83,12 @@ function Login() {
 
         // user logs in
         if (response.status === 200) {
+          setUserEmail(response.data.email);
+          sessionStorage.setItem("userEmail", response.data.email);
           goToPage("/dashboard", true);
         }
       });
-  }, [formData, goToPage]);
+  }, [formData, goToPage, setUserEmail]);
 
   const validateForm = useCallback(() => {
     makePostRequest();
@@ -114,7 +117,12 @@ function Login() {
     validateInput,
   ]);
 
+  // redirect if user is logged in
   useEffect(() => {
+    if (userEmail) {
+      goToPage("/dashboard", true);
+    }
+  }, [userEmail, goToPage]);
 
   return (
     <div className={styles["login-form-container"]}>

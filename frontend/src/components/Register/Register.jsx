@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
 import { createContext, useEffect, useRef, useState } from "react";
+import { Link, useOutletContext } from "react-router-dom";
 import axios from "axios";
 import zxcvbn from "zxcvbn";
 import Form from "../Form/Form";
@@ -15,6 +15,7 @@ import styles from "./Register.module.css";
 export const RegisterContext = createContext({ register: "" });
 
 function Register() {
+  const [userEmail, setUserEmail] = useOutletContext();
   const goToPage = useGoToPage();
   const emailInputRef = useFocusEmailInput();
   const passwordInputRef = useRef(null);
@@ -134,6 +135,8 @@ function Register() {
 
         // user registered successfully
         if (response.status === 200) {
+          setUserEmail(response.data.email);
+          sessionStorage.setItem("userEmail", response.data.email);
           goToPage("/dashboard", true);
         }
       });
@@ -186,7 +189,12 @@ function Register() {
     validateForm();
   };
 
+  // redirect to dashboard if user is logged in
   useEffect(() => {
+    if (userEmail) {
+      goToPage("/dashboard", true);
+    }
+  }, [userEmail, goToPage]);
 
   return (
     <div className={styles["register-form-container"]}>

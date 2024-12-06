@@ -1,8 +1,10 @@
+import { useOutletContext } from "react-router-dom";
 import axios from "axios";
 import { useGoToPage } from "../../hooks/useGoToPage";
 import styles from "./Home.module.css";
 
 function Home() {
+  const [userEmail, setUserEmail] = useOutletContext();
   const goToPage = useGoToPage();
   /* logs out user */
   const makeDeleteRequest = () => {
@@ -19,6 +21,8 @@ function Home() {
       .delete(`${backEndBaseUrl}logout`, { headers: headers })
       .then((response) => {
         if (response.status === 204) {
+          setUserEmail("");
+          sessionStorage.removeItem("userEmail");
           goToPage("login");
         }
       });
@@ -29,18 +33,32 @@ function Home() {
       <header>
         <nav className={styles["navbar"]}>
           <strong>Just another messaging app</strong>
-          <button
-            className={styles["nav-button"] + " " + styles["login"]}
-            onClick={() => goTo("login")}
-          >
-            log in
-          </button>
-          <button
-            className={styles["nav-button"] + " " + styles["register"]}
-            onClick={() => goTo("register")}
-          >
-            sign up
-          </button>
+          {userEmail === null ? (
+            <>
+              <button
+                className={styles["nav-button"] + " " + styles["login"]}
+                onClick={() => goToPage("login")}
+              >
+                log in
+              </button>
+              <button
+                className={styles["nav-button"] + " " + styles["register"]}
+                onClick={() => goToPage("register")}
+              >
+                sign up
+              </button>
+            </>
+          ) : (
+            <div className={styles["user-container"]}>
+              <span>{userEmail}</span>
+              <button
+                className={styles["nav-button"] + " " + styles["logout"]}
+                onClick={makeDeleteRequest}
+              >
+                log out
+              </button>
+            </div>
+          )}
         </nav>
       </header>
       <div className={styles["content"]}>
