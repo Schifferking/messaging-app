@@ -14,7 +14,9 @@ import styles from "./Login.module.css";
 export const LoginContext = createContext({ login: "" });
 
 function Login() {
-  const [userEmail, setUserEmail] = useOutletContext();
+  const stateVariables = useOutletContext();
+  const [errorMessage, setErrorMessage] = stateVariables.errorMessage;
+  const [userEmail, setUserEmail] = stateVariables.userEmail;
   const goToPage = useGoToPage();
   const emailInputRef = useFocusEmailInput();
   const passwordInputRef = useRef(null);
@@ -27,7 +29,6 @@ function Login() {
   const [isInputModified, setIsInputModified] = useState(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [lastInputModified, setLastInputModified] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
   const validateEmailInput = useEmailValidation(emailInputRef, setErrorMessage);
   const checkPasswordInput = usePasswordValidation(setErrorMessage);
 

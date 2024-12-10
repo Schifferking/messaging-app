@@ -15,7 +15,9 @@ import styles from "./Register.module.css";
 export const RegisterContext = createContext({ register: "" });
 
 function Register() {
-  const [userEmail, setUserEmail] = useOutletContext();
+  const stateVariables = useOutletContext();
+  const [errorMessage, setErrorMessage] = stateVariables.errorMessage;
+  const [userEmail, setUserEmail] = stateVariables.userEmail;
   const goToPage = useGoToPage();
   const emailInputRef = useFocusEmailInput();
   const passwordInputRef = useRef(null);
@@ -26,7 +28,6 @@ function Register() {
     passwordRepeat: "",
   });
 
-  const [errorMessage, setErrorMessage] = useState("");
   const [arePasswordsUnequal, setArePasswordsUnequal] = useState(false);
   const [isPasswordScoreLow, setIsPasswordScoreLow] = useState(false);
   const [isPasswordRepeatScoreLow, setIsPasswordRepeatScoreLow] =

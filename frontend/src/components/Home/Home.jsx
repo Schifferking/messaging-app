@@ -4,7 +4,9 @@ import { useGoToPage } from "../../hooks/useGoToPage";
 import styles from "./Home.module.css";
 
 function Home() {
-  const [userEmail, setUserEmail] = useOutletContext();
+  const stateVariables = useOutletContext();
+  const [errorMessage, setErrorMessage] = stateVariables.errorMessage;
+  const [userEmail, setUserEmail] = stateVariables.userEmail;
   const goToPage = useGoToPage();
   /* logs out user */
   const makeDeleteRequest = () => {

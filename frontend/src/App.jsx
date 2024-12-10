@@ -8,13 +8,19 @@ function App() {
     return storedUserEmail || null;
   });
 
+  const [errorMessage, setErrorMessage] = useState("");
   useEffect(() => {
     sessionStorage.getItem("userEmail", userEmail);
   }, [userEmail]);
 
   return (
     <>
-      <Outlet context={[userEmail, setUserEmail]} />
+      <Outlet
+        context={{
+          userEmail: [userEmail, setUserEmail],
+          errorMessage: [errorMessage, setErrorMessage],
+        }}
+      />
     </>
   );
 }
