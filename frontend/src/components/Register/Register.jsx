@@ -1,6 +1,5 @@
 import { createContext, useEffect, useRef, useState } from "react";
 import { Link, useOutletContext } from "react-router-dom";
-import axios from "axios";
 import zxcvbn from "zxcvbn";
 import Form from "../Form/Form";
 import FormChild from "../FormChild/FormChild";
@@ -10,6 +9,7 @@ import { useFocusEmailInput } from "../../hooks/useFocusEmailInput";
 import { usePasswordValidation } from "../../hooks/usePasswordValidation";
 import { useEmailValidation } from "../../hooks/useEmailValidation";
 import { useGoToPage } from "../../hooks/useGoToPage";
+import { useUserAuthentication } from "../../hooks/useUserAuthentication";
 import styles from "./Register.module.css";
 
 export const RegisterContext = createContext({ register: "" });
@@ -18,16 +18,22 @@ function Register() {
   const stateVariables = useOutletContext();
   const [errorMessage, setErrorMessage] = stateVariables.errorMessage;
   const [userEmail, setUserEmail] = stateVariables.userEmail;
-  const goToPage = useGoToPage();
-  const emailInputRef = useFocusEmailInput();
-  const passwordInputRef = useRef(null);
-  const passwordRepeatInputRef = useRef(null);
   const [formData, setformData] = useState({
     email: "",
     password: "",
     passwordRepeat: "",
   });
 
+  const userAuthentication = useUserAuthentication(
+    setErrorMessage,
+    setUserEmail,
+    formData
+  );
+
+  const goToPage = useGoToPage();
+  const emailInputRef = useFocusEmailInput();
+  const passwordInputRef = useRef(null);
+  const passwordRepeatInputRef = useRef(null);
   const [arePasswordsUnequal, setArePasswordsUnequal] = useState(false);
   const [isPasswordScoreLow, setIsPasswordScoreLow] = useState(false);
   const [isPasswordRepeatScoreLow, setIsPasswordRepeatScoreLow] =
@@ -111,38 +117,6 @@ function Register() {
     validateInput(name);
   };
 
-  const makePostRequest = () => {
-    const frontEndUrl = "http://localhost:5173";
-    const backEndBaseUrl = "http://localhost:3000/";
-    const headers = {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      "Access-Control-Allow-Origin": frontEndUrl,
-      Vary: "Origin",
-    };
-
-    axios
-      .post(
-        `${backEndBaseUrl}/signup`,
-        {
-          formData,
-        },
-        { headers: headers }
-      )
-      .then((response) => {
-        if (response.data.error) {
-          return setErrorMessage(response.data.error.email[1]);
-        }
-
-        // user registered successfully
-        if (response.status === 200) {
-          setUserEmail(response.data.email);
-          sessionStorage.setItem("userEmail", response.data.email);
-          goToPage("/dashboard", true);
-        }
-      });
-  };
-
   const validateForm = () => {
     const emailInputValidity = emailInputRef.current.validity;
     const actualPasswordLength = [...passwordInputRef.current.value].length;
@@ -182,7 +156,7 @@ function Register() {
 
     checkPasswordEquity(passwordInputRef);
 
-    makePostRequest();
+    userAuthentication.makeRegisterRequest();
   };
 
   const handleSubmit = (e) => {

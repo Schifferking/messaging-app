@@ -1,34 +1,18 @@
 import { useOutletContext } from "react-router-dom";
-import axios from "axios";
 import { useGoToPage } from "../../hooks/useGoToPage";
+import { useUserAuthentication } from "../../hooks/useUserAuthentication";
 import styles from "./Home.module.css";
 
 function Home() {
   const stateVariables = useOutletContext();
   const [errorMessage, setErrorMessage] = stateVariables.errorMessage;
   const [userEmail, setUserEmail] = stateVariables.userEmail;
-  const goToPage = useGoToPage();
-  /* logs out user */
-  const makeDeleteRequest = () => {
-    const frontEndUrl = "http://localhost:5173";
-    const backEndBaseUrl = "http://localhost:3000/";
-    const headers = {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      "Access-Control-Allow-Origin": frontEndUrl,
-      Vary: "Origin",
-    };
+  const userAuthentication = useUserAuthentication(
+    setErrorMessage,
+    setUserEmail
+  );
 
-    axios
-      .delete(`${backEndBaseUrl}logout`, { headers: headers })
-      .then((response) => {
-        if (response.status === 204) {
-          setUserEmail("");
-          sessionStorage.removeItem("userEmail");
-          goToPage("login");
-        }
-      });
-  };
+  const goToPage = useGoToPage();
 
   return (
     <>
@@ -55,7 +39,7 @@ function Home() {
               <span>{userEmail}</span>
               <button
                 className={styles["nav-button"] + " " + styles["logout"]}
-                onClick={makeDeleteRequest}
+                onClick={userAuthentication.makeLogOutRequest}
               >
                 log out
               </button>

@@ -1,6 +1,5 @@
 import { createContext, useCallback, useEffect, useRef, useState } from "react";
 import { Link, useOutletContext } from "react-router-dom";
-import axios from "axios";
 import Form from "../Form/Form";
 import FormChild from "../FormChild/FormChild";
 import EmailInput from "../EmailInput/EmailInput";
@@ -9,6 +8,7 @@ import { useFocusEmailInput } from "../../hooks/useFocusEmailInput";
 import { useEmailValidation } from "../../hooks/useEmailValidation";
 import { usePasswordValidation } from "../../hooks/usePasswordValidation";
 import { useGoToPage } from "../../hooks/useGoToPage";
+import { useUserAuthentication } from "../../hooks/useUserAuthentication";
 import styles from "./Login.module.css";
 
 export const LoginContext = createContext({ login: "" });
@@ -24,6 +24,12 @@ function Login() {
     email: "",
     password: "",
   });
+
+  const userAuthentication = useUserAuthentication(
+    setErrorMessage,
+    setUserEmail,
+    formData
+  );
 
   // consider using a reducer to remove the next 3 state variables
   const [isInputModified, setIsInputModified] = useState(false);
@@ -59,41 +65,9 @@ function Login() {
     validateInput(name);
   };
 
-  const makePostRequest = useCallback(() => {
-    const frontEndUrl = "http://localhost:5173";
-    const backEndBaseUrl = "http://localhost:3000/";
-    const headers = {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      "Access-Control-Allow-Origin": frontEndUrl,
-      Vary: "Origin",
-    };
-
-    axios
-      .post(
-        `${backEndBaseUrl}/login`,
-        {
-          formData,
-        },
-        { headers: headers }
-      )
-      .then((response) => {
-        if (response.data.error) {
-          return setErrorMessage(response.data.error);
-        }
-
-        // user logs in
-        if (response.status === 200) {
-          setUserEmail(response.data.email);
-          sessionStorage.setItem("userEmail", response.data.email);
-          goToPage("/dashboard", true);
-        }
-      });
-  }, [formData, goToPage, setUserEmail]);
-
   const validateForm = useCallback(() => {
-    makePostRequest();
-  }, [makePostRequest]);
+    userAuthentication.makeLoginRequest();
+  }, [userAuthentication]);
 
   const handleSubmit = (e) => {
     setIsInputModified(false);
