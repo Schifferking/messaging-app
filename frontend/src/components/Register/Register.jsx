@@ -119,28 +119,27 @@ function Register() {
 
   const validateForm = () => {
     const emailInputValidity = emailInputRef.current.validity;
-    const actualPasswordLength = [...passwordInputRef.current.value].length;
-    const actualPasswordRepeatLength = [...passwordRepeatInputRef.current.value]
-      .length;
-    const passwordResult = zxcvbn(passwordInputRef.current.value);
-    const passwordRepeatResult = zxcvbn(passwordRepeatInputRef.current.value);
+    const passwordInputValidity = passwordInputRef.current.validity;
+    const passwordRepeatInputValidity = passwordRepeatInputRef.current.validity;
+    const actualPasswordLength = [...formData.password].length;
+    const actualPasswordRepeatLength = [...formData.passwordRepeat].length;
+    const passwordResult = zxcvbn(formData.password);
+    const passwordRepeatResult = zxcvbn(formData.passwordRepeat);
 
     if (!emailInputValidity.valid) {
       return validateEmailInput(emailInputValidity);
     }
 
-    if (!passwordInputRef.current.validity.valid || actualPasswordLength < 8) {
+    if (!passwordInputValidity.valid || actualPasswordLength < 8) {
       return checkPasswordInput(passwordInputRef, actualPasswordLength);
     }
 
+    // discard "easy" passwords (12345678, for example)
     if (passwordResult.score <= 2) {
       return checkPasswordScore(formData.password, setIsPasswordScoreLow);
     }
 
-    if (
-      !passwordRepeatInputRef.current.validity.valid ||
-      actualPasswordRepeatLength < 8
-    ) {
+    if (!passwordRepeatInputValidity.valid || actualPasswordRepeatLength < 8) {
       return checkPasswordInput(
         passwordRepeatInputRef,
         actualPasswordRepeatLength
@@ -154,7 +153,9 @@ function Register() {
       );
     }
 
-    checkPasswordEquity(passwordInputRef);
+    if (formData.password !== formData.passwordRepeat) {
+      return checkPasswordEquity(passwordInputRef);
+    }
 
     userAuthentication.makeRegisterRequest();
   };
