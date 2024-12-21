@@ -1,6 +1,5 @@
 import { createContext, useEffect, useRef, useState } from "react";
 import { Link, useOutletContext } from "react-router-dom";
-import zxcvbn from "zxcvbn";
 import Form from "../Form/Form";
 import FormChild from "../FormChild/FormChild";
 import EmailInput from "../EmailInput/EmailInput";
@@ -10,6 +9,7 @@ import { usePasswordValidation } from "../../hooks/usePasswordValidation";
 import { useEmailValidation } from "../../hooks/useEmailValidation";
 import { useGoToPage } from "../../hooks/useGoToPage";
 import { useUserAuthentication } from "../../hooks/useUserAuthentication";
+import { useFormValidation } from "../../hooks/useFormValidation";
 import styles from "./Register.module.css";
 
 export const RegisterContext = createContext({ register: "" });
@@ -34,25 +34,20 @@ function Register() {
   const emailInputRef = useFocusEmailInput();
   const passwordInputRef = useRef(null);
   const passwordRepeatInputRef = useRef(null);
-  const [arePasswordsUnequal, setArePasswordsUnequal] = useState(false);
+  const inputRefs = { emailInputRef, passwordInputRef, passwordRepeatInputRef };
+  const validateForm = useFormValidation(inputRefs, setErrorMessage);
   const [isPasswordScoreLow, setIsPasswordScoreLow] = useState(false);
   const [isPasswordRepeatScoreLow, setIsPasswordRepeatScoreLow] =
     useState(false);
-  const checkPasswordInput = usePasswordValidation(setErrorMessage);
-  const validateEmailInput = useEmailValidation(emailInputRef, setErrorMessage);
 
-  const checkPasswordEquity = (passwordRef) => {
-    if (formData.password === formData.passwordRepeat) {
-      setArePasswordsUnequal(false);
-      setErrorMessage("");
-    } else {
-      passwordRef.current.focus();
-      setArePasswordsUnequal(true);
-      setErrorMessage(
-        "Passwords are not equal. Ensure that both are identical."
-      );
-    }
+  const setPasswordStateFunctions = {
+    setIsPasswordScoreLow,
+    setIsPasswordRepeatScoreLow,
   };
+
+  const validateEmailInput = useEmailValidation(emailInputRef, setErrorMessage);
+  const { arePasswordsUnequal, validateRegisterPasswordInput } =
+    usePasswordValidation(setErrorMessage);
 
   const getPasswordData = (passwordInputFieldName) => {
     let passwordData = null;
@@ -71,39 +66,12 @@ function Register() {
     return passwordData;
   };
 
-  const checkPasswordScore = (password, setStateFunction) => {
-    const passwordResult = zxcvbn(password);
-    if (passwordResult.score <= 2) {
-      setStateFunction(true);
-      setErrorMessage(passwordResult.feedback.warning);
-    } else {
-      setStateFunction(false);
-      setErrorMessage("");
-    }
-  };
-
-  const validateRegisterPasswordInput = (passwordInputField) => {
-    const { passwordRef, setStateFunction } =
-      getPasswordData(passwordInputField);
-
-    /* treating each unicode character as one, since some are composed of
-       two code points and the "length" property counts code points instead
-       of characters and some unicode characters have two code points */
-
-    const passwordActualLength = [...passwordRef.current.value].length;
-    checkPasswordInput(passwordRef, passwordActualLength);
-    checkPasswordScore(passwordRef.current.value, setStateFunction);
-
-    if (passwordRef.current.validity.valid && passwordActualLength >= 8) {
-      checkPasswordEquity(passwordRef);
-    }
-  };
-
   const validateInput = (inputFieldName) => {
     if (inputFieldName === "email") {
       validateEmailInput(emailInputRef.current.validity);
     } else {
-      validateRegisterPasswordInput(inputFieldName);
+      const passwordInputData = getPasswordData(inputFieldName);
+      validateRegisterPasswordInput(passwordInputData);
     }
   };
 
@@ -117,52 +85,13 @@ function Register() {
     validateInput(name);
   };
 
-  const validateForm = () => {
-    const emailInputValidity = emailInputRef.current.validity;
-    const passwordInputValidity = passwordInputRef.current.validity;
-    const passwordRepeatInputValidity = passwordRepeatInputRef.current.validity;
-    const actualPasswordLength = [...formData.password].length;
-    const actualPasswordRepeatLength = [...formData.passwordRepeat].length;
-    const passwordResult = zxcvbn(formData.password);
-    const passwordRepeatResult = zxcvbn(formData.passwordRepeat);
-
-    if (!emailInputValidity.valid) {
-      return validateEmailInput(emailInputValidity);
-    }
-
-    if (!passwordInputValidity.valid || actualPasswordLength < 8) {
-      return checkPasswordInput(passwordInputRef, actualPasswordLength);
-    }
-
-    // discard "easy" passwords (12345678, for example)
-    if (passwordResult.score <= 2) {
-      return checkPasswordScore(formData.password, setIsPasswordScoreLow);
-    }
-
-    if (!passwordRepeatInputValidity.valid || actualPasswordRepeatLength < 8) {
-      return checkPasswordInput(
-        passwordRepeatInputRef,
-        actualPasswordRepeatLength
-      );
-    }
-
-    if (passwordRepeatResult.score <= 2) {
-      return checkPasswordScore(
-        formData.passwordRepeat,
-        setIsPasswordRepeatScoreLow
-      );
-    }
-
-    if (formData.password !== formData.passwordRepeat) {
-      return checkPasswordEquity(passwordInputRef);
-    }
-
-    userAuthentication.makeRegisterRequest();
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    validateForm();
+    validateForm(
+      formData,
+      userAuthentication.makeRegisterRequest,
+      setPasswordStateFunctions
+    );
   };
 
   // redirect to dashboard if user is logged in
