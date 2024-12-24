@@ -36,7 +36,7 @@ function Login() {
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [lastInputModified, setLastInputModified] = useState("");
   const validateEmailInput = useEmailValidation(emailInputRef, setErrorMessage);
-  const checkPasswordInput = usePasswordValidation(setErrorMessage);
+  const { checkPasswordInput } = usePasswordValidation(setErrorMessage);
 
   const validateInput = useCallback(
     (inputFieldName) => {
