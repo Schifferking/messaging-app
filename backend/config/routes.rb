@@ -10,7 +10,10 @@ Rails.application.routes.draw do
     registration: 'signup'
   },
   controllers: {
-    sessions: 'users/sessions',
-    registrations: 'users/registrations'
+    registrations: 'users/registrations',
+    sessions: 'users/sessions'
+  },
+  default: {
+    format: :json
   }
 end

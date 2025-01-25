@@ -7,9 +7,11 @@ function Home() {
   const stateVariables = useOutletContext();
   const [errorMessage, setErrorMessage] = stateVariables.errorMessage;
   const [userEmail, setUserEmail] = stateVariables.userEmail;
+  const [userToken, setUserToken] = stateVariables.userToken;
   const userAuthentication = useUserAuthentication(
     setErrorMessage,
-    setUserEmail
+    setUserEmail,
+    setUserToken
   );
 
   const goToPage = useGoToPage();

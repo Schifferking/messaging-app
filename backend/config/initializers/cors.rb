@@ -11,18 +11,22 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
     origins "http://localhost:5173"
 
     # add update and destroy to methods when implementing account editions or deletions
+    # note: Authorization header is exposed to be able to store token in frontend
     resource '/signup',
-    :headers => :any,
-    :methods => [:post]
+    headers: :any,
+    methods: [:post],
+    expose: ['access-token', 'expiry', 'token-type', 'Authorization']
 
     # allow post requests to log in users
     resource '/login',
-    :headers => :any,
-    :methods => [:post]
+    headers: :any,
+    methods: [:post],
+    expose: ['access-token', 'expiry', 'token-type', 'Authorization']
 
     # only allow delete requests
     resource '/logout',
-    :headers => :any,
-    :methods => [:delete]
+    headers: :any,
+    methods: [:delete],
+    expose: ['access-token', 'expiry', 'token-type', 'Authorization']
   end
 end

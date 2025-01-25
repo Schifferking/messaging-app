@@ -17,6 +17,7 @@ function Login() {
   const stateVariables = useOutletContext();
   const [errorMessage, setErrorMessage] = stateVariables.errorMessage;
   const [userEmail, setUserEmail] = stateVariables.userEmail;
+  const [userToken, setUserToken] = stateVariables.userToken;
   const goToPage = useGoToPage();
   const emailInputRef = useFocusEmailInput();
   const passwordInputRef = useRef(null);
@@ -28,6 +29,7 @@ function Login() {
   const userAuthentication = useUserAuthentication(
     setErrorMessage,
     setUserEmail,
+    setUserToken,
     formData
   );
 
@@ -66,8 +68,8 @@ function Login() {
   };
 
   const validateForm = useCallback(() => {
-    userAuthentication.makeLoginRequest();
-  }, [userAuthentication]);
+    userAuthentication.makeLoginRequest(formData);
+  }, [formData, userAuthentication]);
 
   const handleSubmit = (e) => {
     setIsInputModified(false);

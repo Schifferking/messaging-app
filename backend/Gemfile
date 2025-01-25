@@ -53,3 +53,9 @@ gem "devise", "~> 4.9"
 # note: do not use "zxcbn-ruby" gem because "zxcvbn-ruby#test" returns a different password score compared to the one
 # from the javascript library at the moment of writing this
 gem "zxcvbn"
+
+# Use Devise::JWT for token authentication
+gem "devise-jwt"
+
+# Use jsonapi-serializer to serialize jwt token and be able to send it to frontend
+gem "jsonapi-serializer"

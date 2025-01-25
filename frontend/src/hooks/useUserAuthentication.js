@@ -1,10 +1,11 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import axios from "axios";
 import { useGoToPage } from "./useGoToPage";
 
 export function useUserAuthentication(
   setErrorMessage,
   setUserEmail,
+  setUserToken,
   formData = {}
 ) {
   const goToPage = useGoToPage();
@@ -19,38 +20,71 @@ export function useUserAuthentication(
     };
   }, []);
 
-  const makeLoginRequest = useCallback(() => {
-    axios
-      .post(
-        `${backEndUrl}login`,
-        {
-          formData,
-        },
-        { headers: headers }
-      )
-      .then((response) => {
-        if (response.data.error) {
-          return setErrorMessage(response.data.error);
-        }
+  const LogIn = useCallback(
+    (response) => {
+      const userEmail = response.data.data.email;
+      const userToken = response.headers.authorization;
+      setUserEmail(userEmail);
+      setUserToken(userToken);
+      sessionStorage.setItem("userEmail", userEmail);
+      sessionStorage.setItem("userToken", userToken);
+      goToPage("/", true);
+    },
+    [goToPage, setUserEmail, setUserToken]
+  );
 
-        // user logs in
-        if (response.status === 200) {
-          setUserEmail(response.data.email);
-          sessionStorage.setItem("userEmail", response.data.email);
-          goToPage("/dashboard", true);
-        }
-      });
-  }, [formData, goToPage, headers, setErrorMessage, setUserEmail]);
+  const LogOut = useCallback(() => {
+    sessionStorage.removeItem("userEmail");
+    sessionStorage.removeItem("userToken");
+    setUserEmail("");
+    setUserToken("");
+    goToPage("/login", true);
+  }, [goToPage, setUserEmail, setUserToken]);
+
+  // add Authorization header before requests
+  axios.interceptors.request.use(function (config) {
+    const userToken = sessionStorage.getItem("userToken");
+    config.headers.Authorization = userToken ? userToken : "";
+    return config;
+  });
+
+  const makeLoginRequest = useCallback(
+    (formData = {}) => {
+      axios
+        .post(
+          `${backEndUrl}login`,
+          {
+            user: {
+              email: formData.email,
+              password: formData.password,
+            },
+          },
+          { headers: headers }
+        )
+        .then((response) => {
+          if (response.data.error) {
+            return setErrorMessage(response.data.error);
+          }
+
+          // user logs in
+          if (response.status === 200) {
+            LogIn(response);
+          }
+        });
+    },
+    [headers, LogIn, setErrorMessage]
+  );
 
   const makeLogOutRequest = () => {
     axios
       .delete(`${backEndUrl}logout`, { headers: headers })
       .then((response) => {
-        if (response.status === 204) {
-          setUserEmail("");
-          sessionStorage.removeItem("userEmail");
-          goToPage("login");
+        if (response.status === 200) {
+          LogOut();
         }
+      })
+      .catch((error) => {
+        // note: replace this comment with code when handling some error
       });
   };
 
@@ -59,7 +93,11 @@ export function useUserAuthentication(
       .post(
         `${backEndUrl}signup`,
         {
-          formData,
+          user: {
+            email: formData.email,
+            password: formData.password,
+            password_confirmation: formData.passwordRepeat,
+          },
         },
         { headers: headers }
       )
@@ -70,12 +108,26 @@ export function useUserAuthentication(
 
         // user registered successfully
         if (response.status === 200) {
-          setUserEmail(response.data.email);
-          sessionStorage.setItem("userEmail", response.data.email);
-          goToPage("/dashboard", true);
+          LogIn(response);
         }
       });
   };
+
+  // prevent not redirecting when component first renders warning
+  useEffect(() => {
+    axios.interceptors.response.use(
+      function (response) {
+        return response;
+      },
+      function (error) {
+        if (error.status === 401) {
+          LogOut();
+        }
+
+        return Promise.reject(error);
+      }
+    );
+  }, [LogOut]);
 
   return { makeLoginRequest, makeLogOutRequest, makeRegisterRequest };
 }

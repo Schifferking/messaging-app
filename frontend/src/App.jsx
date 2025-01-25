@@ -8,16 +8,26 @@ function App() {
     return storedUserEmail || null;
   });
 
+  const [userToken, setUserToken] = useState(() => {
+    const storedUserToken = sessionStorage.getItem("userToken");
+    return storedUserToken || null;
+  });
+
   const [errorMessage, setErrorMessage] = useState("");
   useEffect(() => {
     sessionStorage.getItem("userEmail", userEmail);
   }, [userEmail]);
+
+  useEffect(() => {
+    sessionStorage.getItem("userToken", userToken);
+  }, [userToken]);
 
   return (
     <>
       <Outlet
         context={{
           userEmail: [userEmail, setUserEmail],
+          userToken: [userToken, setUserToken],
           errorMessage: [errorMessage, setErrorMessage],
         }}
       />

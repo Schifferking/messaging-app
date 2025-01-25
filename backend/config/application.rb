@@ -23,6 +23,7 @@ module Backend
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
     # disable session store since sign_in method it's throwing DisabledSessionError when trying to log in user in Devise's Sessions controller
     # NOTE: add store parameter set to false every time using sign_in (e.g. sign_in @user, store: false)
     config.session_store :disabled
