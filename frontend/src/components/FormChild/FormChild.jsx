@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import PropTypes from "prop-types";
-import { LoginContext } from "../Login/Login";
-import { RegisterContext } from "../Register/Register";
+import { LoginContext } from "../../contexts/LoginContext";
+import { RegisterContext } from "../../contexts/RegisterContext";
 import styles from "./FormChild.module.css";
 import Warning from "../../assets/icons/warning.svg?react";
 import CheckCircle from "../../assets/icons/check-circle.svg?react";

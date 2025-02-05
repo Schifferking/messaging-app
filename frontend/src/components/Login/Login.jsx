@@ -1,17 +1,16 @@
-import { createContext, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useOutletContext } from "react-router-dom";
 import Form from "../Form/Form";
 import FormChild from "../FormChild/FormChild";
 import EmailInput from "../EmailInput/EmailInput";
 import PasswordInput from "../PasswordInput/PasswordInput";
+import { LoginContext } from "../../contexts/LoginContext";
 import { useFocusEmailInput } from "../../hooks/useFocusEmailInput";
 import { useEmailValidation } from "../../hooks/useEmailValidation";
 import { usePasswordValidation } from "../../hooks/usePasswordValidation";
 import { useGoToPage } from "../../hooks/useGoToPage";
 import { useUserAuthentication } from "../../hooks/useUserAuthentication";
 import styles from "./Login.module.css";
-
-export const LoginContext = createContext({ login: "" });
 
 function Login() {
   const stateVariables = useOutletContext();

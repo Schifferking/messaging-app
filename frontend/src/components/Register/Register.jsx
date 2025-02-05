@@ -1,9 +1,10 @@
-import { createContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useOutletContext } from "react-router-dom";
 import Form from "../Form/Form";
 import FormChild from "../FormChild/FormChild";
 import EmailInput from "../EmailInput/EmailInput";
 import PasswordInput from "../PasswordInput/PasswordInput";
+import { RegisterContext } from "../../contexts/RegisterContext";
 import { useFocusEmailInput } from "../../hooks/useFocusEmailInput";
 import { usePasswordValidation } from "../../hooks/usePasswordValidation";
 import { useEmailValidation } from "../../hooks/useEmailValidation";
@@ -11,8 +12,6 @@ import { useGoToPage } from "../../hooks/useGoToPage";
 import { useUserAuthentication } from "../../hooks/useUserAuthentication";
 import { useFormValidation } from "../../hooks/useFormValidation";
 import styles from "./Register.module.css";
-
-export const RegisterContext = createContext({ register: "" });
 
 function Register() {
   const stateVariables = useOutletContext();
