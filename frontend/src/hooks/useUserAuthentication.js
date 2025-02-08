@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo } from "react";
-import axios from "axios";
+import { useCallback, useEffect } from "react";
+import axios_api_instance from "../axios_api_instance";
 import { useGoToPage } from "./useGoToPage";
 
 export function useUserAuthentication(
@@ -9,17 +9,6 @@ export function useUserAuthentication(
   formData = {}
 ) {
   const goToPage = useGoToPage();
-  const frontEndUrl = "http://localhost:5173";
-  const backEndUrl = "http://localhost:3000/";
-  const headers = useMemo(() => {
-    return {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      "Access-Control-Allow-Origin": frontEndUrl,
-      Vary: "Origin",
-    };
-  }, []);
-
   const LogIn = useCallback(
     (response) => {
       const userEmail = response.data.data.email;
@@ -28,7 +17,7 @@ export function useUserAuthentication(
       setUserToken(userToken);
       sessionStorage.setItem("userEmail", userEmail);
       sessionStorage.setItem("userToken", userToken);
-      goToPage("/", true);
+      goToPage("/dashboard", true);
     },
     [goToPage, setUserEmail, setUserToken]
   );
@@ -42,7 +31,7 @@ export function useUserAuthentication(
   }, [goToPage, setUserEmail, setUserToken]);
 
   // add Authorization header before requests
-  axios.interceptors.request.use(function (config) {
+  axios_api_instance.interceptors.request.use(function (config) {
     const userToken = sessionStorage.getItem("userToken");
     config.headers.Authorization = userToken ? userToken : "";
     return config;
@@ -50,17 +39,13 @@ export function useUserAuthentication(
 
   const makeLoginRequest = useCallback(
     (formData = {}) => {
-      axios
-        .post(
-          `${backEndUrl}login`,
-          {
-            user: {
-              email: formData.email,
-              password: formData.password,
-            },
+      axios_api_instance
+        .post("login", {
+          user: {
+            email: formData.email,
+            password: formData.password,
           },
-          { headers: headers }
-        )
+        })
         .then((response) => {
           if (response.data.error) {
             return setErrorMessage(response.data.error);
@@ -72,12 +57,12 @@ export function useUserAuthentication(
           }
         });
     },
-    [headers, LogIn, setErrorMessage]
+    [LogIn, setErrorMessage]
   );
 
   const makeLogOutRequest = () => {
-    axios
-      .delete(`${backEndUrl}logout`, { headers: headers })
+    axios_api_instance
+      .delete("logout")
       .then((response) => {
         if (response.status === 200) {
           LogOut();
@@ -89,18 +74,14 @@ export function useUserAuthentication(
   };
 
   const makeRegisterRequest = () => {
-    axios
-      .post(
-        `${backEndUrl}signup`,
-        {
-          user: {
-            email: formData.email,
-            password: formData.password,
-            password_confirmation: formData.passwordRepeat,
-          },
+    axios_api_instance
+      .post("signup", {
+        user: {
+          email: formData.email,
+          password: formData.password,
+          password_confirmation: formData.passwordRepeat,
         },
-        { headers: headers }
-      )
+      })
       .then((response) => {
         if (response.data.error) {
           return setErrorMessage(response.data.error.email[1]);
@@ -115,7 +96,7 @@ export function useUserAuthentication(
 
   // prevent not redirecting when component first renders warning
   useEffect(() => {
-    axios.interceptors.response.use(
+    axios_api_instance.interceptors.response.use(
       function (response) {
         return response;
       },
@@ -129,5 +110,9 @@ export function useUserAuthentication(
     );
   }, [LogOut]);
 
-  return { makeLoginRequest, makeLogOutRequest, makeRegisterRequest };
+  return {
+    makeLoginRequest,
+    makeLogOutRequest,
+    makeRegisterRequest,
+  };
 }

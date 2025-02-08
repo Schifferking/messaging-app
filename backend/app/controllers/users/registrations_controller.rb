@@ -5,6 +5,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
   respond_to :json
   before_action :configure_registration_params, only: [:create]
 
+  def index
+    users_emails = User.pluck(:email)
+    render json: {
+      status: { code: 200, message: "Fetched users emails." },
+      data: { users: users_emails }
+    }, status: :ok
+  end
+
   private
 
   def configure_registration_params

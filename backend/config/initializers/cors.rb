@@ -28,5 +28,10 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
     headers: :any,
     methods: [:delete],
     expose: ['access-token', 'expiry', 'token-type', 'Authorization']
+
+    resource '/users',
+    headers: :any,
+    methods: [:get],
+    expose: ['access-token', 'expiry', 'token-type', 'Authorization']
   end
 end
