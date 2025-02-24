@@ -5,6 +5,7 @@ import { useGoToPage } from "./useGoToPage";
 export function useUserAuthentication(
   setErrorMessage,
   setUserEmail,
+  setUserId,
   setUserToken,
   formData = {}
 ) {
@@ -12,23 +13,28 @@ export function useUserAuthentication(
   const LogIn = useCallback(
     (response) => {
       const userEmail = response.data.data.email;
+      const userId = response.data.data.id;
       const userToken = response.headers.authorization;
       setUserEmail(userEmail);
+      setUserId(userId);
       setUserToken(userToken);
       sessionStorage.setItem("userEmail", userEmail);
       sessionStorage.setItem("userToken", userToken);
+      sessionStorage.setItem("userId", userId);
       goToPage("/dashboard", true);
     },
-    [goToPage, setUserEmail, setUserToken]
+    [goToPage, setUserEmail, setUserId, setUserToken]
   );
 
   const LogOut = useCallback(() => {
     sessionStorage.removeItem("userEmail");
+    sessionStorage.removeItem("userId");
     sessionStorage.removeItem("userToken");
     setUserEmail("");
+    setUserId("");
     setUserToken("");
     goToPage("/login", true);
-  }, [goToPage, setUserEmail, setUserToken]);
+  }, [goToPage, setUserEmail, setUserId, setUserToken]);
 
   // add Authorization header before requests
   axios_api_instance.interceptors.request.use(function (config) {

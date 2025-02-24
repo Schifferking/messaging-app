@@ -1,8 +1,10 @@
 .dashboard-container {
   display: grid;
-  grid-template-columns: 0.25fr 1fr;
-  grid-template-rows: repeat(2, 1fr);
-  gap: 8px;
+  grid-template-columns: 0.2fr 1fr;
+  grid-template-rows: 0.12fr 1fr;
+  gap: 16px;
+  height: 100vh;
+  padding: 8px;
 }
 
 .header {
@@ -29,27 +31,108 @@
   color: var(--text);
 }
 
+/* setting a max height and overflow properties in parent (main, vertical-
+   navbar) and child (content-container, users-list) elements to enable scroll
+   in messages
+*/
+
 .vertical-navbar {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 8px 16px;
   border: 1px solid var(--text);
+  max-height: 100vh;
+  overflow: auto;
 }
 
 .users-header {
   align-self: center;
+  padding-top: 16px;
 }
 
 .users-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   list-style-type: none;
-  padding: 0;
+  padding: 16px;
   margin: 0;
+  max-height: 100vh;
+  overflow-y: auto;
+  scrollbar-color: var(--text) var(--secondary);
 }
 
 .main {
   display: flex;
-  justify-content: center;
-  align-items: center;
   border: 1px solid var(--text);
+  max-height: 100vh;
+  overflow: auto;
+}
+
+.content-container {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  max-height: 100vh;
+  overflow-y: auto;
+  scrollbar-color: var(--text) var(--secondary);
+}
+
+.content-container > p {
+  margin: auto;
+  font-size: 3rem;
+}
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  max-height: 100vh;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.chat-message {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid var(--text);
+  padding: 0px 8px;
+}
+
+.italic-text {
+  font-style: italic;
+}
+
+.message-form {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+  margin-top: auto;
+}
+
+.message-label {
+  align-self: center;
+}
+
+/* make input take remaining space in flex container */
+.message-input {
+  flex: 1;
+}
+
+/* remove animation declared in FormChild.module.css */
+.message-input:valid {
+  animation: none;
+}
+
+.message-submit-button {
+  padding: 0.5em 1em;
+  border: 1px solid var(--background);
+  border-radius: 10px;
+  background-color: var(--secondary);
+  color: var(--text);
 }

@@ -16,6 +16,9 @@ class User < ApplicationRecord
   validate :password_score_cannot_be_equal_or_lower_than_two
   validate :password_cannot_be_different_from_password_confirmation
 
+  has_many :sent_messages, foreign_key: "sender_id", class_name: "Message"
+  has_many :received_messages, foreign_key: "receiver_id", class_name: "Message"
+
   def password_score_cannot_be_equal_or_lower_than_two
     if Zxcvbn.zxcvbn(password)["score"] <= 2
       errors.add(:password, "score can't be equal or lower than two")
@@ -27,4 +30,7 @@ class User < ApplicationRecord
       errors.add(:password, "can't be different from password_confirmation")
     end
   end
+
+  # query users id, email except current user
+  scope :data_list, ->(excluded_user) { excluding(excluded_user).select(:id, :email) }
 end

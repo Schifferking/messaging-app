@@ -17,6 +17,7 @@ function Register() {
   const stateVariables = useOutletContext();
   const [errorMessage, setErrorMessage] = stateVariables.errorMessage;
   const [userEmail, setUserEmail] = stateVariables.userEmail;
+  const [userId, setUserId] = stateVariables.userId;
   const [userToken, setUserToken] = stateVariables.userToken;
   const [formData, setformData] = useState({
     email: "",
@@ -27,6 +28,7 @@ function Register() {
   const userAuthentication = useUserAuthentication(
     setErrorMessage,
     setUserEmail,
+    setUserId,
     setUserToken,
     formData
   );

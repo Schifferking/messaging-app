@@ -8,15 +8,26 @@ function App() {
     return storedUserEmail || null;
   });
 
+  const [userId, setUserId] = useState(() => {
+    const storedUserId = sessionStorage.getItem("userId");
+    return storedUserId || null;
+  });
+
   const [userToken, setUserToken] = useState(() => {
     const storedUserToken = sessionStorage.getItem("userToken");
     return storedUserToken || null;
   });
 
   const [errorMessage, setErrorMessage] = useState("");
+
+  // update user data
   useEffect(() => {
     sessionStorage.getItem("userEmail", userEmail);
   }, [userEmail]);
+
+  useEffect(() => {
+    sessionStorage.getItem("userId", userId);
+  }, [userId]);
 
   useEffect(() => {
     sessionStorage.getItem("userToken", userToken);
@@ -27,6 +38,7 @@ function App() {
       <Outlet
         context={{
           userEmail: [userEmail, setUserEmail],
+          userId: [userId, setUserId],
           userToken: [userToken, setUserToken],
           errorMessage: [errorMessage, setErrorMessage],
         }}

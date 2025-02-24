@@ -1,0 +1,46 @@
+.user-list-element {
+  border: 1px solid var(--text);
+  padding: 0px 8px;
+  cursor: pointer;
+  animation: 0.4s hover-out;
+}
+
+.user-list-element:focus,
+.user-list-element:hover {
+  animation: 0.4s forwards hover-in;
+}
+
+.user-list-element:active {
+  animation: 0.4s enlarge-element;
+}
+
+@keyframes hover-in {
+  0% {
+    box-shadow: 0 0 0px 1000px var(--background) inset;
+  }
+
+  100% {
+    box-shadow: 0 0 0px 1000px var(--secondary) inset;
+  }
+}
+
+@keyframes hover-out {
+  0% {
+    box-shadow: 0 0 0px 1000px var(--secondary) inset;
+  }
+
+  100% {
+    box-shadow: 0 0 0px 1000px var(--background) inset;
+  }
+}
+
+@keyframes enlarge-element {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.03);
+  }
+}

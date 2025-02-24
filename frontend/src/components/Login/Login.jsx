@@ -16,6 +16,7 @@ function Login() {
   const stateVariables = useOutletContext();
   const [errorMessage, setErrorMessage] = stateVariables.errorMessage;
   const [userEmail, setUserEmail] = stateVariables.userEmail;
+  const [userId, setUserId] = stateVariables.userId;
   const [userToken, setUserToken] = stateVariables.userToken;
   const goToPage = useGoToPage();
   const emailInputRef = useFocusEmailInput();
@@ -28,6 +29,7 @@ function Login() {
   const userAuthentication = useUserAuthentication(
     setErrorMessage,
     setUserEmail,
+    setUserId,
     setUserToken,
     formData
   );

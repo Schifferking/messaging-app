@@ -33,5 +33,10 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
     headers: :any,
     methods: [:get],
     expose: ['access-token', 'expiry', 'token-type', 'Authorization']
+
+    resource '/messages',
+    headers: :any,
+    methods: [:get, :post],
+    expose: ['access-token', 'expiry', 'token-type', 'Authorization']
   end
 end

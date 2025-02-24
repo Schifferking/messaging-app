@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
+import UserListElement from "../UserListElement/UserListElement";
 import { useGoToPage } from "../../hooks/useGoToPage";
 import { useUserAuthentication } from "../../hooks/useUserAuthentication";
 import axios_api_instance from "../../axios_api_instance";
@@ -10,13 +11,53 @@ function Dashboard() {
   const stateVariables = useOutletContext();
   const [errorMessage, setErrorMessage] = stateVariables.errorMessage;
   const [userEmail, setUserEmail] = stateVariables.userEmail;
+  const [userId, setUserId] = stateVariables.userId;
   const [userToken, setUserToken] = stateVariables.userToken;
-  const [usersEmails, setUsersEmails] = useState([]);
+  const [usersData, setUsersData] = useState([]);
+  const [receiverEmail, setReceiverEmail] = useState("");
+  const [userMessage, setUserMessage] = useState("");
+  const [chatMessages, setChatMessages] = useState([]);
+  const messageInputRef = useRef(null);
   const userAuthentication = useUserAuthentication(
     setErrorMessage,
     setUserEmail,
+    setUserId,
     setUserToken
   );
+
+  // fetch messages
+  const handleClick = (receiverId) => {
+    setReceiverEmail(receiverId);
+    axios_api_instance
+      .get(`messages?senderId=${userId}&receiverId=${receiverId}`)
+      .then((response) => {
+        const fetchedMessages = response.data.data.messages;
+        setChatMessages(fetchedMessages);
+      });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (userMessage !== "") {
+      axios_api_instance
+        .post("messages", {
+          message: {
+            content: userMessage,
+            receiver_id: receiverEmail,
+            sender_id: userId,
+          },
+        })
+        .then((response) => {
+          // consider adding something in case of error
+        });
+
+      setUserMessage("");
+    }
+  };
+
+  const handleChange = (e) => {
+    setUserMessage(e.target.value);
+  };
 
   // redirect anonymous user to home page
   useEffect(() => {
@@ -26,20 +67,21 @@ function Dashboard() {
   }, [userToken, goToPage]);
 
   useEffect(() => {
-    axios_api_instance.get("users").then((response) => {
-      if (response.status === 200) {
-        // filter current user email and generate id for rendering
-        const unfilteredUsersEmails = response.data.data.users;
-        const filteredUsersEmails = unfilteredUsersEmails
-          .filter((email) => email !== userEmail)
-          .map((email) => {
-            return { userEmail: email, id: crypto.randomUUID() };
-          });
-
-        setUsersEmails(filteredUsersEmails);
-      }
-    });
+    if (userEmail) {
+      axios_api_instance.get("users").then((response) => {
+        if (response.status === 200) {
+          const fetchedUsersData = response.data.data.users;
+          setUsersData(fetchedUsersData);
+        }
+      });
+    }
   }, [userEmail]);
+
+  useEffect(() => {
+    if (receiverEmail !== "") {
+      messageInputRef.current.focus();
+    }
+  }, [receiverEmail]);
 
   return (
     <div className={styles["dashboard-container"]}>
@@ -60,14 +102,61 @@ function Dashboard() {
       <nav className={styles["vertical-navbar"]}>
         <h1 className={styles["users-header"]}>Users</h1>
         <ul className={styles["users-list"]}>
-          {usersEmails.map((userEmail) => (
-            <li key={userEmail.id}>{userEmail.userEmail}</li>
+          {usersData.map((userData) => (
+            <UserListElement
+              key={userData.id}
+              handleClick={() => handleClick(userData.id)}
+              userEmail={userData.email}
+            />
           ))}
         </ul>
       </nav>
       <main className={styles["main"]}>
         <div className={styles["content-container"]}>
-          When a chat is opened, messages should be rendered here
+          {chatMessages.length >= 1 && (
+            <div className={styles["chat-container"]}>
+              {chatMessages.map((chatMessage) => (
+                <div
+                  className={styles["chat-message"]}
+                  key={crypto.randomUUID()}
+                >
+                  <p>{chatMessage.content}</p>
+                  <p className={styles["italic-text"]}>{chatMessage.email}</p>
+                </div>
+              ))}
+            </div>
+          )}
+          {receiverEmail === "" ? (
+            <p>Select a user to chat</p>
+          ) : (
+            /* using autocomplete "one-time-code" to disable autocomplete (may)
+               stop working in the future */
+            <form
+              autoComplete={"one-time-code"}
+              className={styles["message-form"]}
+              noValidate
+              onSubmit={handleSubmit}
+            >
+              <label className={styles["message-label"]} htmlFor="message">
+                * Message
+              </label>
+              <input
+                autoComplete={"one-time-code"}
+                className={styles["message-input"]}
+                id="message"
+                name="message"
+                onChange={handleChange}
+                placeholder={""}
+                ref={messageInputRef}
+                required
+                type="text"
+                value={userMessage}
+              />
+              <button className={styles["message-submit-button"]} type="submit">
+                Send
+              </button>
+            </form>
+          )}
         </div>
       </main>
     </div>

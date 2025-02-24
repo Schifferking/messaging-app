@@ -20,4 +20,6 @@ Rails.application.routes.draw do
   default: {
     format: :json
   }
+
+  resources :messages, only: [:create, :index]
 end

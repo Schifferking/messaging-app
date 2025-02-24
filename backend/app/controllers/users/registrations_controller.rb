@@ -6,10 +6,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
   before_action :configure_registration_params, only: [:create]
 
   def index
-    users_emails = User.pluck(:email)
+    users_data = User.data_list(current_user)
     render json: {
-      status: { code: 200, message: "Fetched users emails." },
-      data: { users: users_emails }
+      status: { code: 200, message: "Fetched users data." },
+      data: { users: users_data }
     }, status: :ok
   end
 
