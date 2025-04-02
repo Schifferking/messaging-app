@@ -1,4 +1,4 @@
-import { useOutletContext } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import { useGoToPage } from "../../hooks/useGoToPage";
 import { useUserAuthentication } from "../../hooks/useUserAuthentication";
 import styles from "./Home.module.css";
@@ -7,10 +7,12 @@ function Home() {
   const stateVariables = useOutletContext();
   const [errorMessage, setErrorMessage] = stateVariables.errorMessage;
   const [userEmail, setUserEmail] = stateVariables.userEmail;
+  const [userId, setUserId] = stateVariables.userId;
   const [userToken, setUserToken] = stateVariables.userToken;
   const userAuthentication = useUserAuthentication(
     setErrorMessage,
     setUserEmail,
+    setUserId,
     setUserToken
   );
 
@@ -38,10 +40,11 @@ function Home() {
             </>
           ) : (
             <div className={styles["user-container"]}>
-              <span>{userEmail}</span>
+              <Link to={`/user/${userId}`}>{userEmail}</Link>
+              <Link to="/dashboard">Dashboard</Link>
               <button
                 className={styles["nav-button"] + " " + styles["logout"]}
-                onClick={userAuthentication.makeLogOutRequest}
+                onClick={() => userAuthentication.makeLogOutRequest()}
               >
                 log out
               </button>

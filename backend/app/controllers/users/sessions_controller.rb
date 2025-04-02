@@ -9,7 +9,7 @@ class Users::SessionsController < Devise::SessionsController
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_in_params
-    devise_parameter_sanitizer.permit(:create, keys: [user: [:email, :password]])
+    devise_parameter_sanitizer.permit(:create, keys: [user: %i[email password]])
   end
 
   private
@@ -17,7 +17,7 @@ class Users::SessionsController < Devise::SessionsController
   # override respond_with to send jwt token to frontend
   def respond_with(resource, _opts = {})
     render json: {
-      status: { code: 200, message: "Logged in successfully." },
+      status: { code: 200, message: 'Logged in successfully.' },
       data: UserSerializer.new(resource).serializable_hash[:data][:attributes]
     }, status: :ok
   end
@@ -27,7 +27,7 @@ class Users::SessionsController < Devise::SessionsController
     if current_user
       render json: {
         status: 200,
-        message: "Logged out successfully."
+        message: 'Logged out successfully.'
       }, status: :ok
     else
       render json: {

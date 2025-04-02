@@ -22,9 +22,16 @@ body,
 
 a {
   color: var(--primary);
-  text-decoration-color: var(--accent);
+  text-decoration: none;
 }
 
-a:hover {
-  text-decoration: none;
+a:hover,
+a:focus {
+  animation: 0.4s 0.2s forwards link-hover 1 normal;
+}
+
+@keyframes link-hover {
+  100% {
+    text-decoration: underline var(--accent);
+  }
 }

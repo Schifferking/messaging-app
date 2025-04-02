@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import UserListElement from "../UserListElement/UserListElement";
 import { useGoToPage } from "../../hooks/useGoToPage";
 import { useUserAuthentication } from "../../hooks/useUserAuthentication";
@@ -87,9 +87,10 @@ function Dashboard() {
     <div className={styles["dashboard-container"]}>
       <header className={styles["header"]}>
         <nav className={styles["navbar"]}>
-          <strong>Just another messaging app</strong>
+          <Link to="/">Just another messaging app</Link>
           <div className={styles["user-dropdown"]}>
-            <span>{userEmail}</span>
+            <Link to={`/user/${userId}`}>{userEmail}</Link>
+            <Link to="/dashboard">Dashboard</Link>
             <button
               className={styles["nav-button"]}
               onClick={userAuthentication.makeLogOutRequest}
@@ -121,7 +122,12 @@ function Dashboard() {
                   key={crypto.randomUUID()}
                 >
                   <p>{chatMessage.content}</p>
-                  <p className={styles["italic-text"]}>{chatMessage.email}</p>
+                  <Link
+                    to={`/user/${chatMessage.sender_id}`}
+                    className={styles["italic-text"]}
+                  >
+                    {chatMessage.email}
+                  </Link>
                 </div>
               ))}
             </div>
@@ -129,8 +135,8 @@ function Dashboard() {
           {receiverEmail === "" ? (
             <p>Select a user to chat</p>
           ) : (
-            /* using autocomplete "one-time-code" to disable autocomplete (may)
-               stop working in the future */
+            /* using autocomplete "one-time-code" to disable autocomplete (may
+               stop working in the future) */
             <form
               autoComplete={"one-time-code"}
               className={styles["message-form"]}

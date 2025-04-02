@@ -5,11 +5,11 @@ class MessagesController < ApplicationController
     @message = Message.new(message_params)
     if @message.save
       render json: {
-        status: { code: 200, message: "Message sent." }
+        status: { code: 200, message: 'Message sent.' }
       }, status: :ok
     else
       render json: {
-        status: { code: 422, message: "Error, message cannot be sent." }
+        status: { code: 422, message: 'Error, message cannot be sent.' }
       }, status: :unprocessable_entity
     end
   end
@@ -17,7 +17,7 @@ class MessagesController < ApplicationController
   def index
     messages = Message.chat_history(params[:senderId], params[:receiverId])
     render json: {
-      status: { code: 200, message: "Messages fetched." },
+      status: { code: 200, message: 'Messages fetched.' },
       data: { messages: messages }
     }, status: :ok
   end
