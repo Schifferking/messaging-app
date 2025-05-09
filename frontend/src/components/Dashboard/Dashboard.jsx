@@ -17,6 +17,7 @@ function Dashboard() {
   const [receiverEmail, setReceiverEmail] = useState("");
   const [userMessage, setUserMessage] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
   const messageInputRef = useRef(null);
   const userAuthentication = useUserAuthentication(
     setErrorMessage,
@@ -59,6 +60,10 @@ function Dashboard() {
     setUserMessage(e.target.value);
   };
 
+  const handleLinksClick = () => {
+    setIsOpen(!isOpen);
+  };
+
   // redirect anonymous user to home page
   useEffect(() => {
     if (!userToken) {
@@ -89,14 +94,21 @@ function Dashboard() {
         <nav className={styles["navbar"]}>
           <Link to="/">Just another messaging app</Link>
           <div className={styles["user-dropdown"]}>
-            <Link to={`/user/${userId}`}>{userEmail}</Link>
-            <Link to="/dashboard">Dashboard</Link>
-            <button
-              className={styles["nav-button"]}
-              onClick={userAuthentication.makeLogOutRequest}
-            >
-              log out
+            <button className={styles["nav-button"]} onClick={handleLinksClick}>
+              Browse links
             </button>
+            {isOpen && (
+              <>
+                <Link to={`/user/${userId}`}>{userEmail}</Link>
+                <Link to="/dashboard">Dashboard</Link>
+                <button
+                  className={styles["nav-button"]}
+                  onClick={userAuthentication.makeLogOutRequest}
+                >
+                  log out
+                </button>
+              </>
+            )}
           </div>
         </nav>
       </header>
@@ -122,10 +134,7 @@ function Dashboard() {
                   key={crypto.randomUUID()}
                 >
                   <p>{chatMessage.content}</p>
-                  <Link
-                    to={`/user/${chatMessage.sender_id}`}
-                    className={styles["italic-text"]}
-                  >
+                  <Link to={`/user/${chatMessage.sender_id}`}>
                     {chatMessage.email}
                   </Link>
                 </div>

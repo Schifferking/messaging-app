@@ -44,3 +44,9 @@
     transform: scale(1.03);
   }
 }
+
+@media (max-width: 1199px) {
+  .user-list-element {
+    padding: 9px;
+  }
+}

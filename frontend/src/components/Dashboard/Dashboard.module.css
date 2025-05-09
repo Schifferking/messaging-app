@@ -103,7 +103,7 @@
   padding: 0px 8px;
 }
 
-.italic-text {
+.user-profile-link {
   font-style: italic;
 }
 
@@ -135,4 +135,64 @@
   border-radius: 10px;
   background-color: var(--secondary);
   color: var(--text);
+}
+
+@media (max-width: 501px) {
+  /* adding div to make rule more specific than 1199px */
+  div.dashboard-container {
+    grid-template-columns: none;
+    grid-template-rows: repeat(2, 0.5fr) 1fr;
+  }
+
+  .header {
+    grid-column: unset;
+  }
+
+  .navbar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .user-dropdown {
+    flex-direction: column;
+  }
+
+  .nav-button {
+    padding: 0.6em 1.2em;
+  }
+
+  .vertical-navbar,
+  .main {
+    border: 2px solid var(--text);
+  }
+
+  /* override 1199px rule adding div */
+  div.content-container > p {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 1199px) {
+  .dashboard-container {
+    grid-template-columns: 0.5fr 1fr;
+  }
+
+  .header {
+    padding: 0.5em;
+  }
+
+  .users-list {
+    gap: 1rem;
+  }
+
+  /* "select user to chat" message */
+  .content-container > p {
+    font-size: 2rem;
+  }
+
+  .message-form {
+    flex-direction: column;
+    gap: 32px;
+  }
 }

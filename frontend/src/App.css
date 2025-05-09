@@ -35,3 +35,9 @@ a:focus {
     text-decoration: underline var(--accent);
   }
 }
+
+@media (max-width: 1199px) {
+  a {
+    text-decoration: underline var(--accent);
+  }
+}
